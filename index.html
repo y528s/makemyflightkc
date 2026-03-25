@@ -687,6 +687,136 @@
         padding: 20px;
       }
     }
+
+    /* ============================================
+       RESULT CARD
+       ============================================ */
+    .result-card {
+      background: linear-gradient(135deg, rgba(240,180,41,0.12), rgba(240,180,41,0.04));
+      border: 1px solid rgba(240,180,41,0.3);
+      border-radius: 20px;
+      padding: 36px 32px;
+      text-align: center;
+      margin: 24px 0;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .result-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-card.hidden {
+      display: none;
+    }
+
+    .result-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .leave-time-display {
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    #leaveTimeNumber {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(4rem, 12vw, 7rem);
+      color: var(--gold);
+    }
+
+    .period {
+      font-size: 1.8rem;
+      color: var(--gold-light);
+      margin-left: 4px;
+      vertical-align: super;
+    }
+
+    .flight-subtext {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .status-green {
+      background: rgba(52,211,153,0.15);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,0.3);
+    }
+
+    .status-amber {
+      background: rgba(251,191,36,0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.3);
+    }
+
+    .status-red {
+      background: rgba(248,113,113,0.15);
+      color: #f87171;
+      border: 1px solid rgba(248,113,113,0.3);
+    }
+
+    .breakdown-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .chip.chip-total {
+      color: var(--gold);
+      border-color: rgba(240,180,41,0.3);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .chip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-tone {
+      font-size: 1rem;
+      color: var(--cream);
+      font-style: italic;
+      line-height: 1.6;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
@@ -910,13 +1040,18 @@
 
     </div>
 
-    <!-- Result Card (hidden by default, shown after calculation) -->
-    <section class="card result-card mt-md" id="resultCard" style="display: none;">
-      <h2 class="text-gold">Leave by <span id="leaveTime">--:--</span></h2>
-      <div class="mt-md" id="breakdownChips">
-        <!-- Chips will be injected here -->
+    <!-- Result Card -->
+    <div id="resultCard" class="result-card hidden">
+      <p class="result-label">LEAVE BY</p>
+      <div class="leave-time-display">
+        <span id="leaveTimeNumber"></span>
+        <span id="leaveTimePeriod" class="period"></span>
       </div>
-    </section>
+      <p id="flightTimeSubtext" class="flight-subtext"></p>
+      <div id="statusPill" class="status-pill"></div>
+      <div id="breakdownChips" class="breakdown-chips"></div>
+      <p id="resultTone" class="result-tone"></p>
+    </div>
 
     <!-- About / SEO Section -->
     <section style="border-top:1px solid var(--card-bd);margin-top:48px;padding-top:40px;">
@@ -1598,6 +1733,80 @@
 
       // Step 5 — Fire GA4 event
       if (typeof gtag === 'function') gtag('event', 'calculate_clicked');
+
+      // Step 6 — Render result
+      renderResult(currentBreakdown, displayHour, displayMin, period, currentFlightTime, statusText, statusClass, toneText);
+    }
+
+    /* ============================================
+       RENDER RESULT
+       ============================================ */
+    function renderResult(breakdown, displayHour, displayMin, period, flightTime, statusText, statusClass, toneText) {
+      var card = document.getElementById('resultCard');
+
+      // Populate time
+      document.getElementById('leaveTimeNumber').textContent = displayHour + ':' + displayMin;
+      document.getElementById('leaveTimePeriod').textContent = period;
+
+      // Populate subtext
+      document.getElementById('flightTimeSubtext').textContent = 'For your ' + flightTime + ' departure from MCI';
+
+      // Populate status pill
+      var pill = document.getElementById('statusPill');
+      pill.textContent = statusText;
+      pill.className = 'status-pill ' + statusClass;
+
+      // Populate tone
+      document.getElementById('resultTone').textContent = toneText;
+
+      // Build breakdown chips
+      var chipsContainer = document.getElementById('breakdownChips');
+      chipsContainer.innerHTML = '';
+
+      var chips = [
+        { label: 'Drive', value: breakdown.adjustedDrive },
+        { label: 'Parking', value: breakdown.parkingBuffer },
+        { label: 'Security', value: breakdown.adjustedSecurity },
+        { label: 'Gate', value: breakdown.gateWalk }
+      ];
+
+      if (breakdown.bagBuffer > 0) chips.push({ label: 'Bags', value: breakdown.bagBuffer });
+      if (breakdown.intlBuffer > 0) chips.push({ label: 'International', value: breakdown.intlBuffer });
+      if (breakdown.partyBuffer > 0) chips.push({ label: 'Party', value: breakdown.partyBuffer });
+      if (breakdown.mobilityBuffer > 0) chips.push({ label: 'Mobility', value: breakdown.mobilityBuffer });
+      if (breakdown.riskBuffer !== 0) chips.push({ label: 'Risk', value: breakdown.riskBuffer });
+
+      chips.forEach(function (chip, i) {
+        var el = document.createElement('div');
+        el.className = 'chip';
+        var sign = chip.value >= 0 ? '+' : '';
+        el.textContent = chip.label + ': ' + sign + chip.value + 'min';
+        chipsContainer.appendChild(el);
+        setTimeout(function () { el.classList.add('visible'); }, 100 + (i * 100));
+      });
+
+      // Total chip
+      var totalEl = document.createElement('div');
+      totalEl.className = 'chip chip-total';
+      totalEl.textContent = 'Total: ' + breakdown.totalBuffer + 'min';
+      chipsContainer.appendChild(totalEl);
+      setTimeout(function () { totalEl.classList.add('visible'); }, 100 + (chips.length * 100));
+
+      // Show card
+      card.classList.remove('hidden');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          card.classList.add('visible');
+        });
+      });
+
+      // Scroll to card
+      setTimeout(function () {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+
+      // GA4
+      if (typeof gtag === 'function') gtag('event', 'result_shown');
     }
 
     /* ============================================
