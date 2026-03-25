@@ -97,6 +97,11 @@
     /* ============================================
        BACKGROUND
        ============================================ */
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #1e3a70 0%, #0a1628 55%, #050d1a 100%);
+      background-attachment: fixed;
+    }
+
     [data-theme="dark"] body {
       background: radial-gradient(ellipse at 50% 0%, #1e3a70 0%, #0a1628 55%, #050d1a 100%);
       background-attachment: fixed;
@@ -465,16 +470,6 @@
 
     [data-theme="light"] .sticky-bottom {
       background: linear-gradient(to top, #f7f4ee 60%, transparent);
-    }
-
-    /* ============================================
-       FOOTER
-       ============================================ */
-    .footer {
-      text-align: center;
-      padding: 32px 0;
-      font-size: clamp(0.75rem, 2vw, 0.8rem);
-      color: var(--text-muted);
     }
 
     /* ============================================
@@ -923,6 +918,136 @@
     .copy-link:hover {
       color: var(--gold);
     }
+
+    /* Ko-fi card */
+    .kofi-card {
+      text-align: center;
+      background: rgba(255,95,95,0.06);
+      border: 1px solid rgba(255,95,95,0.2);
+    }
+    .kofi-top {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .kofi-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .kofi-btn {
+      display: block;
+      width: 100%;
+      background: #ff5f5f;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 10px;
+    }
+    .kofi-btn:hover {
+      background: #ff4444;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,95,95,0.4);
+    }
+    .kofi-fine {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #060f1e;
+      border-top: 1px solid rgba(240,180,41,0.2);
+      margin-top: 60px;
+      padding: 0;
+    }
+    [data-theme="light"] .site-footer {
+      background: #0a1628;
+    }
+    .footer-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .footer-plane {
+      font-size: 1.4rem;
+    }
+    .footer-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--gold);
+      letter-spacing: -0.01em;
+    }
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: #4a5a7a;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 28px;
+    }
+    .footer-links-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .footer-links-row a {
+      color: #8d99b2;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .footer-links-row a:hover {
+      color: var(--gold);
+    }
+    .footer-dot {
+      color: #2a3a5a;
+      font-size: 0.82rem;
+    }
+    .footer-disclaimer-toggle {
+      font-size: 0.75rem;
+      color: #4a5a7a;
+      cursor: pointer;
+      margin-top: 20px;
+      margin-bottom: 0;
+      transition: color 0.2s;
+    }
+    .footer-disclaimer-toggle:hover {
+      color: var(--muted);
+    }
+    .footer-disclaimer-text {
+      font-size: 0.75rem;
+      color: #4a5a7a;
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 12px auto 0;
+    }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: #2a3a5a;
+      margin-top: 24px;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -1159,13 +1284,21 @@
       <p id="resultTone" class="result-tone"></p>
     </div>
 
-    <!-- Post-result sections (populated in Steps 6 & 7) -->
+    <!-- Ko-fi Section -->
+    <div id="kofiSection" style="display:none;">
+      <div class="card kofi-card">
+        <p class="kofi-top">Free. No ads. No upsell. Built to settle the argument once and for all.</p>
+        <p class="kofi-sub">If it helped — a coffee keeps it running.</p>
+        <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
+        <p class="kofi-fine">100% goes to keeping this free.</p>
+      </div>
+    </div>
+
+    <!-- Post-result sections -->
     <div id="shareSection" style="display:none;">
       <div class="card">
         <h2 style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
         <p class="card-subhead">This took 7 seconds. Help a Kansas Citian make their flight.</p>
-        <button id="instagramBtn" class="share-btn share-btn-gold" onclick="downloadInstagramCard()">📸 Download Instagram Card</button>
-        <p class="share-prompt">Post to your story and tag a KC friend who always cuts it close ✈️</p>
         <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send to My Driver</button>
         <div class="share-grid-2">
           <button id="facebookBtn" class="share-btn share-btn-facebook" onclick="shareFacebook()">Facebook</button>
@@ -1193,14 +1326,6 @@
           <p style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;">By submitting your email you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Privacy Policy</a>. We never sell your data.</p>
         </div>
         <p id="emailSuccess" style="display:none;color:var(--success);font-weight:500;font-size:1rem;margin-top:16px;">✈️ Sent! The calculator has spoken.</p>
-      </div>
-    </div>
-    <div id="kofiSection" style="display:none;">
-      <div class="card" style="padding:32px;text-align:center;background:rgba(255,255,255,0.02);">
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;color:var(--white);margin-bottom:6px;">Free. No ads. No upsell.</p>
-        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.9rem;color:var(--muted);margin-bottom:20px;">If it helped — a coffee keeps it running.</p>
-        <a href="https://ko-fi.com/ysilver" target="_blank" rel="noopener" id="kofiBtn" style="display:block;width:100%;background:#ff5f5f;color:white;border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;transition:background 0.2s,transform 0.2s;">☕ Buy me a coffee — $3</a>
-        <p style="font-size:0.72rem;color:var(--muted);margin-top:8px;">100% goes to keeping this free.</p>
       </div>
     </div>
 
@@ -1235,33 +1360,38 @@
       </div>
     </section>
 
-    <!-- Disclaimer (collapsed) -->
-    <div style="margin-top:32px;text-align:center;">
-      <span id="disclaimerToggle" role="button" tabindex="0" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);cursor:pointer;">⚠️ Important disclaimer</span>
-      <div id="disclaimerText" style="display:none;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);line-height:1.6;padding:12px 0;text-align:left;max-width:600px;margin:0 auto;">This tool is for informational purposes only. Estimates are based on historical averages and publicly available data. The creator assumes zero liability for missed flights, travel disruptions, damages, or losses of any kind arising from use of this tool. You are solely responsible for determining when to leave for the airport. Not affiliated with Kansas City International Airport, the City of Kansas City, or any airline. Always verify current conditions at FlyKC.com before traveling. When in doubt, leave earlier.</div>
-    </div>
-
-    <!-- Footer -->
-    <footer style="text-align:center;padding:32px 0;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);line-height:1.7;">
-      <p>Built with ✈️ for Kansas City by <a href="https://yosefsilver.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Yosef Silver</a></p>
-      <p style="margin-top:6px;">
-        <a href="https://yosefsilver.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">yosefsilver.com</a>
-        &middot;
-        <a href="https://instagram.com/yosefsilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">@yosefsilver</a>
-        &middot;
-        <a href="https://linkedin.com/in/yosefsilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">LinkedIn</a>
-      </p>
-      <p style="margin-top:6px;"><a href="mailto:departures@makemyflightkc.com" style="color:var(--gold);text-decoration:none;">departures@makemyflightkc.com</a></p>
-      <p style="margin-top:6px;"><a href="https://ko-fi.com/ysilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">ko-fi.com/ysilver</a></p>
-      <p style="margin-top:6px;">
-        <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>
-        &middot;
-        <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Terms of Use</a>
-      </p>
-      <p style="margin-top:6px;"><span id="footerDisclaimerToggle" role="button" tabindex="0" style="cursor:pointer;">⚠️ Important disclaimer</span></p>
-    </footer>
-
   </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-plane">✈️</span>
+        <span class="footer-name">Make My Flight KC</span>
+      </div>
+      <p class="footer-tagline">Built for Kansas City. Free forever.</p>
+      <div class="footer-links-row">
+        <a href="https://yosefsilver.com" target="_blank">yosefsilver.com</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="https://instagram.com/yosefsilver" target="_blank">@yosefsilver</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="https://linkedin.com/in/yosefsilver" target="_blank">LinkedIn</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="mailto:departures@makemyflightkc.com">departures@makemyflightkc.com</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="https://ko-fi.com/ysilver" target="_blank">☕ ko-fi.com/ysilver</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="/privacy.html" target="_blank">Privacy Policy</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="/terms.html" target="_blank">Terms of Use</a>
+      </div>
+      <p class="footer-disclaimer-toggle" onclick="toggleDisclaimer()">⚠️ Important disclaimer</p>
+      <div id="disclaimerText" class="footer-disclaimer-text" style="display:none;">This tool is for informational purposes only. Estimates are based on historical averages and publicly available data. The creator assumes zero liability for missed flights, travel disruptions, damages, or losses of any kind arising from use of this tool. You are solely responsible for determining when to leave for the airport. Not affiliated with Kansas City International Airport, the City of Kansas City, or any airline. Always verify current conditions at FlyKC.com before traveling. When in doubt, leave earlier.</div>
+      <p class="footer-copy">&copy; 2026 Make My Flight KC</p>
+    </div>
+  </footer>
 
   <!-- Cookie Notice -->
   <div id="cookieNotice" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0d2044;padding:14px 20px;align-items:center;justify-content:space-between;gap:16px;">
@@ -2030,78 +2160,6 @@
     /* ============================================
        INSTAGRAM CARD
        ============================================ */
-    function downloadInstagramCard() {
-      var canvas = document.createElement('canvas');
-      canvas.width = 1080;
-      canvas.height = 1080;
-      var ctx = canvas.getContext('2d');
-
-      // Background
-      ctx.fillStyle = '#0a1628';
-      ctx.fillRect(0, 0, 1080, 1080);
-
-      // Radial gradient overlay
-      var grad = ctx.createRadialGradient(540, 0, 0, 540, 540, 900);
-      grad.addColorStop(0, 'rgba(30,58,112,0.8)');
-      grad.addColorStop(1, 'rgba(10,22,40,0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 1080);
-
-      // Top gold line
-      ctx.strokeStyle = '#f0b429';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(140, 200);
-      ctx.lineTo(940, 200);
-      ctx.stroke();
-
-      // Brand name
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '600 52px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('MAKE MY FLIGHT KC', 540, 160);
-
-      // LEAVE BY label
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '400 38px Arial';
-      ctx.fillText('LEAVE BY', 540, 400);
-
-      // Leave time (big)
-      ctx.fillStyle = '#f0b429';
-      ctx.font = 'bold 220px Arial';
-      ctx.fillText(currentLeaveTime, 540, 650);
-
-      // Flight time subtext
-      ctx.fillStyle = '#ede9df';
-      ctx.font = '300 42px Arial';
-      ctx.fillText('For your ' + currentFlightTime + ' MCI departure', 540, 760);
-
-      // Bottom gold line
-      ctx.strokeStyle = '#f0b429';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(140, 860);
-      ctx.lineTo(940, 860);
-      ctx.stroke();
-
-      // URL
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '400 36px Arial';
-      ctx.fillText('makemyflightkc.com', 540, 930);
-
-      // Download
-      canvas.toBlob(function (blob) {
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'make-my-flight-kc.png';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-
-      if (typeof gtag === 'function') gtag('event', 'instagram_card_downloaded');
-    }
-
     /* ============================================
        WHATSAPP
        ============================================ */
@@ -2256,43 +2314,13 @@
     })();
 
     /* ============================================
-       KO-FI BUTTON HOVER + TRACKING
-       ============================================ */
-    (function initKofi() {
-      var btn = document.getElementById('kofiBtn');
-      btn.addEventListener('mouseenter', function () {
-        btn.style.background = '#ff4444';
-        btn.style.transform = 'translateY(-2px)';
-      });
-      btn.addEventListener('mouseleave', function () {
-        btn.style.background = '#ff5f5f';
-        btn.style.transform = 'translateY(0)';
-      });
-      btn.addEventListener('click', function () {
-        if (typeof gtag === 'function') gtag('event', 'kofi_clicked');
-      });
-    })();
-
-    /* ============================================
        DISCLAIMER TOGGLE
        ============================================ */
-    function setupDisclaimerToggle(triggerId) {
-      var trigger = document.getElementById(triggerId);
-      if (!trigger) return;
-      trigger.addEventListener('click', function () {
-        var text = document.getElementById('disclaimerText');
-        text.style.display = text.style.display === 'none' ? 'block' : 'none';
-        text.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-      trigger.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          trigger.click();
-        }
-      });
+    function toggleDisclaimer() {
+      var text = document.getElementById('disclaimerText');
+      text.style.display = text.style.display === 'none' ? 'block' : 'none';
+      text.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    setupDisclaimerToggle('disclaimerToggle');
-    setupDisclaimerToggle('footerDisclaimerToggle');
 
     /* ============================================
        COOKIE NOTICE
@@ -2307,13 +2335,6 @@
       });
     })();
 
-    /* ============================================
-       FOOTER LINK HOVER UNDERLINES
-       ============================================ */
-    document.querySelectorAll('footer a').forEach(function (a) {
-      a.addEventListener('mouseenter', function () { a.style.textDecoration = 'underline'; });
-      a.addEventListener('mouseleave', function () { a.style.textDecoration = 'none'; });
-    });
   </script>
 </body>
 </html>
