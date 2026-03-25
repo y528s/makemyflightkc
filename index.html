@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make My Flight KC — MCI Airport Departure Calculator | When to Leave for KCI</title>
+  <meta name="description" content="Stop guessing when to leave for MCI. Make My Flight KC calculates exactly when Kansas City travelers should leave for the airport based on your neighborhood, parking, security lane, and flight details. Free. Built by a KC local.">
+  <meta name="keywords" content="MCI airport, KCI airport, Kansas City airport, when to leave for MCI, MCI security wait times, Kansas City flight calculator, how early to arrive MCI, KCI departure calculator, Make My Flight KC">
+  <link rel="canonical" href="https://makemyflightkc.com">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://makemyflightkc.com">
+  <meta property="og:title" content="Make My Flight KC — When Should I Leave for MCI?">
+  <meta property="og:description" content="The KC-specific calculator that tells you exactly when to leave home for your MCI flight. Built by a Kansas Citian who has asked this question a thousand times.">
+  <meta property="og:site_name" content="Make My Flight KC">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Make My Flight KC — When Should I Leave for MCI?">
+  <meta name="twitter:description" content="The KC-specific calculator that tells you exactly when to leave home for your MCI flight. Built by a Kansas Citian who has asked this question a thousand times.">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Make My Flight KC",
+    "description": "Kansas City-specific airport departure calculator for MCI.",
+    "url": "https://makemyflightkc.com",
+    "applicationCategory": "TravelApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": "0"},
+    "author": {
+      "@type": "Person",
+      "name": "Yosef Silver",
+      "url": "https://yosefsilver.com"
+    },
+    "about": {
+      "@type": "Airport",
+      "name": "Kansas City International Airport",
+      "iataCode": "MCI",
+      "addressLocality": "Kansas City",
+      "addressRegion": "MO"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How early should I arrive at MCI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The new single terminal at MCI opened in 2023 and changed the math for every traveler. Most domestic flyers can arrive 75-90 minutes before departure. TSA PreCheck holders often need just 60 minutes. But holidays, weather, and parking can shift that window significantly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are MCI parking options and shuttle times?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The terminal garage is attached and walkable (5 min buffer). The Economy Lot blue shuttle runs every 20 minutes, 24/7 (22 min buffer). Off-site options like The Parking Spot include a 15-minute buffer for their shuttle ride."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are MCI TSA security wait times?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard security averages 7-12 minutes, TSA PreCheck averages 4-5 minutes, and CLEAR averages 3-4 minutes at MCI's new single terminal."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often does the Economy Lot blue shuttle run at MCI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Economy Lot blue shuttle at MCI runs approximately every 20 minutes, 24 hours a day, 7 days a week."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Make My Flight KC affiliated with MCI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Make My Flight KC is an independent tool built by a KC local. It is not affiliated with Kansas City International Airport, the City of Kansas City, or any airline."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4R6R0QDYZZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4R6R0QDYZZ');
+  </script>
+
+  <!-- TODO: Replace data-website-id with your Umami website ID -->
+  <!-- TODO: Replace src with your Umami script URL -->
+  <!-- <script async defer data-website-id="YOUR_UMAMI_WEBSITE_ID" src="YOUR_UMAMI_SCRIPT_URL"></script> -->
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      /* Dark mode (default) */
+      --sky: #0a1628;
+      --sky-mid: #0d2044;
+      --horizon: #1a3a6e;
+      --gold: #f0b429;
+      --gold-light: #fcd84a;
+      --amber: #e07b00;
+      --white: #f7f4ee;
+      --cream: #ede9df;
+      --muted: #8d99b2;
+      --card: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.08);
+      --success: #34d399;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --runway: #162035;
+
+      --bg: var(--sky);
+      --surface: var(--card);
+      --surface-border: var(--card-border);
+      --text: var(--white);
+      --text-muted: var(--muted);
+      --input-bg: rgba(255,255,255,0.06);
+      --input-border: rgba(255,255,255,0.12);
+      --toggle-border: rgba(255,255,255,0.15);
+    }
+
+    [data-theme="light"] {
+      --bg: #f7f4ee;
+      --surface: #ffffff;
+      --surface-border: #e5e0d5;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --input-bg: #ffffff;
+      --input-border: #e5e0d5;
+      --toggle-border: #e5e0d5;
+      --card: #ffffff;
+      --card-border: #e5e0d5;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Dark mode background gradient */
+    body:not([data-theme="light"]) {
+      background: radial-gradient(ellipse at 50% 0%, #1e3a70 0%, #0a1628 55%, #050d1a 100%);
+      background-attachment: fixed;
+    }
+
+    /* ===== STAR BACKGROUND ===== */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .stars-container {
+      display: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration, 3s) ease-in-out infinite alternate;
+      opacity: var(--star-opacity, 0.4);
+    }
+
+    @keyframes twinkle {
+      0% { opacity: var(--star-opacity, 0.4); transform: scale(1); }
+      100% { opacity: calc(var(--star-opacity, 0.4) * 0.3); transform: scale(0.6); }
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3, h4 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+    }
+
+    h3 {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+    }
+
+    p {
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    /* ===== LABELS ===== */
+    .form-label {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 32px);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    body:not([data-theme="light"]) .card {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    [data-theme="light"] .card {
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    /* ===== INPUTS & SELECTS ===== */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      background: rgba(240,180,41,0.06);
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238d99b2' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a1628;
+      background: var(--gold);
+      border: none;
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #fcd84a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(240,180,41,0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ===== TOGGLE PILLS ===== */
+    .pill-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text);
+      background: transparent;
+      border: 1px solid var(--toggle-border);
+      border-radius: 100px;
+      padding: 10px 18px;
+      cursor: pointer;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      white-space: nowrap;
+    }
+
+    .pill.active {
+      background: var(--gold);
+      color: #0a1628;
+      font-weight: 600;
+      border-color: var(--gold);
+    }
+
+    .pill:hover:not(.active) {
+      border-color: var(--gold);
+    }
+
+    /* ===== SEGMENTED CONTROL ===== */
+    .segmented {
+      display: flex;
+      border: 1px solid var(--toggle-border);
+      border-radius: 100px;
+      overflow: hidden;
+      min-height: 48px;
+    }
+
+    .segmented button {
+      flex: 1;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      min-height: 48px;
+    }
+
+    .segmented button.active {
+      background: var(--gold);
+      color: #0a1628;
+      font-weight: 600;
+    }
+
+    /* ===== DARK/LIGHT TOGGLE ===== */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: 1px solid var(--toggle-border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--text);
+      transition: border-color 0.3s, color 0.3s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ===== AUTOCOMPLETE ===== */
+    .autocomplete-wrapper {
+      position: relative;
+    }
+
+    .autocomplete-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--sky-mid);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      margin-top: 4px;
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+    }
+
+    [data-theme="light"] .autocomplete-list {
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .autocomplete-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .autocomplete-item:hover,
+    .autocomplete-item.highlighted {
+      background: rgba(240,180,41,0.12);
+    }
+
+    .autocomplete-item mark {
+      background: none;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ===== DRIVE TIME PILL ===== */
+    .drive-time-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(240,180,41,0.08);
+      border: 1px solid rgba(240,180,41,0.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      margin-top: 8px;
+    }
+
+    /* ===== RESULT CARD ===== */
+    .result-card {
+      text-align: center;
+      padding: clamp(28px, 6vw, 48px);
+    }
+
+    .result-card .leave-time {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(4rem, 12vw, 7rem);
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .result-card .leave-time .ampm {
+      font-size: 1.8rem;
+      color: var(--gold-light);
+    }
+
+    .result-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-top: 16px;
+    }
+
+    .status-pill.on-track {
+      background: rgba(52,211,153,0.15);
+      color: var(--success);
+    }
+
+    .status-pill.cutting-close {
+      background: rgba(251,191,36,0.15);
+      color: var(--warn);
+    }
+
+    .status-pill.tight {
+      background: rgba(248,113,113,0.15);
+      color: var(--danger);
+    }
+
+    /* ===== BREAKDOWN CHIPS ===== */
+    .breakdown-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 16px 0 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .breakdown-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex-shrink: 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .chip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chip.total {
+      background: rgba(240,180,41,0.12);
+      color: var(--gold);
+      border-color: rgba(240,180,41,0.3);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* ===== RESULT ANIMATION ===== */
+    .result-section {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .result-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== SHARE BUTTONS ===== */
+    .share-section {
+      display: none;
+    }
+
+    .share-section.visible {
+      display: block;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-whatsapp:hover {
+      background: #20bd5a;
+    }
+
+    .btn-instagram {
+      background: var(--gold);
+      color: #0a1628;
+    }
+
+    .btn-kofi {
+      background: #ff5f5f;
+      color: white;
+    }
+
+    .btn-kofi:hover {
+      background: #e85050;
+    }
+
+    .btn-share-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-share-row > * {
+      flex: 1;
+    }
+
+    .share-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ===== ADVANCED MODE ===== */
+    .advanced-toggle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s;
+    }
+
+    .advanced-toggle:hover {
+      color: var(--gold-light);
+    }
+
+    .advanced-toggle .arrow {
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+
+    .advanced-toggle.open .arrow {
+      transform: rotate(90deg);
+    }
+
+    .advanced-content {
+      display: none;
+      padding-top: 12px;
+    }
+
+    .advanced-content.open {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    /* ===== GAME DAY BANNER ===== */
+    .game-banner {
+      display: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-top: 10px;
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.25);
+      color: var(--warn);
+    }
+
+    .game-banner.visible {
+      display: block;
+    }
+
+    /* ===== STICKY CALCULATE BUTTON (mobile) ===== */
+    @media (max-width: 640px) {
+      .sticky-btn-wrapper {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 20px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        background: linear-gradient(transparent, var(--bg) 30%);
+        z-index: 40;
+      }
+
+      .sticky-btn-wrapper.hidden {
+        display: none;
+      }
+
+      .calculator-section {
+        padding-bottom: 80px;
+      }
+    }
+
+    @media (min-width: 641px) {
+      .sticky-btn-wrapper {
+        display: contents;
+      }
+    }
+
+    /* ===== COOKIE NOTICE ===== */
+    .cookie-notice {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0d2044;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--cream);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      z-index: 100;
+    }
+
+    .cookie-notice.hidden {
+      display: none;
+    }
+
+    .cookie-notice a {
+      color: var(--gold);
+    }
+
+    .cookie-notice button {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0a1628;
+      background: var(--gold);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* ===== DISCLAIMER ===== */
+    .disclaimer-toggle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .disclaimer-toggle:hover {
+      color: var(--gold);
+    }
+
+    .disclaimer-content {
+      display: none;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-top: 8px;
+      padding: 16px;
+      background: var(--input-bg);
+      border-radius: 10px;
+    }
+
+    .disclaimer-content.open {
+      display: block;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      text-align: center;
+      padding: 40px 0 24px;
+      position: relative;
+    }
+
+    .header .plane-emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 8px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .header .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      color: var(--gold);
+    }
+
+    .header .tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 {
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .hero .subhead {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto 12px;
+    }
+
+    .hero .social-proof {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 40px 0 32px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer .footer-line {
+      margin-bottom: 4px;
+    }
+
+    /* ===== FAQ SECTION ===== */
+    .faq h3 {
+      color: var(--gold);
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    .faq p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ===== UTILITY ===== */
+    .text-gold { color: var(--gold); }
+    .text-muted { color: var(--text-muted); }
+    .text-center { text-align: center; }
+    .text-small { font-size: 0.78rem; }
+    .text-tiny { font-size: 0.72rem; }
+    .mt-1 { margin-top: 8px; }
+    .mt-2 { margin-top: 16px; }
+    .mt-3 { margin-top: 24px; }
+    .mb-1 { margin-bottom: 8px; }
+    .mb-2 { margin-bottom: 16px; }
+    .hidden { display: none !important; }
+
+    /* ===== COPY TO CLIPBOARD ===== */
+    .copy-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.3s;
+    }
+
+    .copy-link:hover {
+      color: var(--gold);
+    }
+
+    /* ===== FLIGHT TAB TOGGLE ===== */
+    .tab-toggle {
+      display: flex;
+      border: 1px solid var(--toggle-border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .tab-toggle button {
+      flex: 1;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      min-height: 48px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .tab-toggle button.active {
+      background: var(--gold);
+      color: #0a1628;
+      font-weight: 600;
+    }
+
+    /* ===== NOTIFICATION INPUT ===== */
+    .notify-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .notify-form input {
+      flex: 1;
+    }
+
+    .notify-form button {
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Stars (generated by JS) -->
+  <div class="stars-container" id="starsContainer"></div>
+
+  <div class="container">
+    <!-- Content will be added in Step 2+ -->
+    <p style="text-align:center; padding: 100px 0; color: var(--text-muted);">Make My Flight KC — Step 1 complete. CSS design system loaded.</p>
+  </div>
+
+</body>
+</html>
