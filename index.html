@@ -2011,15 +2011,33 @@
       if (spare > 30) {
         statusText = 'ON TRACK';
         statusClass = 'status-green';
-        toneText = "MCI's new terminal was built for this. You've got time.";
       } else if (spare >= 10) {
         statusText = 'CUTTING IT CLOSE';
         statusClass = 'status-amber';
-        toneText = 'Move with purpose. No second coffee.';
       } else {
         statusText = 'TIGHT — LEAVE NOW';
         statusClass = 'status-red';
-        toneText = 'Leave now. The airport will forgive you for speed-walking.';
+      }
+
+      // Flight date detection
+      var today = new Date();
+      var tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      var isToday = flightDate.toDateString() === today.toDateString();
+      var isTomorrow = flightDate.toDateString() === tomorrow.toDateString();
+      var isFuture = !isToday && !isTomorrow;
+
+      if (isToday) {
+        if (statusClass === 'status-green')
+          toneText = "MCI's new terminal was built for this. You've got time. Now go.";
+        else if (statusClass === 'status-amber')
+          toneText = 'You can make this. Stop reading this and start moving.';
+        else
+          toneText = 'Go. Right now. You can stress about parking on the way home.';
+      } else if (isTomorrow) {
+        toneText = "You're all set for tomorrow. Screenshot this or add it to your calendar so you don't forget.";
+      } else {
+        toneText = 'Good planning. Come back day-of and recalculate with live traffic conditions in mind. MCI will be ready for you.';
       }
 
       currentBreakdown = {
@@ -2076,6 +2094,10 @@
       // Show recalculate button
       var recalcBtn = document.getElementById('recalculateBtn');
       if (recalcBtn) recalcBtn.style.display = 'block';
+
+      // Show viral nudge
+      var viralNudge = document.getElementById('viralNudge');
+      if (viralNudge) viralNudge.style.display = 'block';
     }
 
     function recalculate() {
