@@ -761,6 +761,19 @@
       border: 1px solid rgba(248,113,113,0.3);
     }
 
+    .security-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      margin-top: 8px;
+      padding: 10px 16px;
+      background: rgba(52,211,153,0.06);
+      border: 1px solid rgba(52,211,153,0.15);
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
     .breakdown-chips {
       display: flex;
       flex-wrap: wrap;
@@ -1743,7 +1756,7 @@
           <h3><span class="card-title-text">Security lane</span></h3>
         </div>
         <div class="seg-control" id="securityControl">
-          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
+          <button type="button" class="seg-btn active" id="secStandard" data-wait="15">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
           <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Enrolled members keep shoes, laptops, and liquids in their bag. Average wait at MCI: 4-5 minutes. Costs $78 for 5 years at tsa.gov/precheck — worth it if you fly more than twice a year.</span></span></button>
           <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Biometric screening that skips the ID check queue — you still go through TSA screening after. Average wait at MCI: 3-4 minutes. Available at 3 MCI checkpoints. Learn more at clearme.com</span></span></button>
         </div>
@@ -1888,6 +1901,7 @@
       <div id="statusPill" class="status-pill"></div>
       <p id="bufferExplainer" class="buffer-explainer"></p>
       <div id="breakdownChips" class="breakdown-chips"></div>
+      <p id="securityNote" class="security-note" style="display:none;">MCI's security is genuinely one of the fastest in the country. Average 7-15 min standard, 4-5 min PreCheck. Upgrade to PreCheck for $78 — pays for itself in time saved.</p>
       <p id="resultTone" class="result-tone"></p>
     </div>
 
@@ -2753,7 +2767,7 @@
 
       // Security base from active segment button
       var activeSecBtn = document.querySelector('#securityControl .seg-btn.active');
-      var securityBase = activeSecBtn ? parseInt(activeSecBtn.getAttribute('data-wait')) : 10;
+      var securityBase = activeSecBtn ? parseInt(activeSecBtn.getAttribute('data-wait')) : 15;
 
       // Bag buffer
       var activeBagPill = document.querySelector('#bagControl .pill.active');
@@ -2764,6 +2778,9 @@
 
       // Gate walk (fixed MCI average)
       var gateWalk = 8;
+
+      // Boarding buffer
+      const boardingBuffer = 35;
 
       // Advanced mode values (default 0 if never opened)
       var activeFlightType = document.querySelector('#flightTypeControl .pill.active');
@@ -2793,6 +2810,7 @@
         bagBuffer +
         parkingBuffer +
         gateWalk +
+        boardingBuffer +
         intlBuffer +
         airlineBuffer +
         partyBuffer +
@@ -2863,6 +2881,7 @@
         parkingBuffer: parkingBuffer,
         adjustedSecurity: adjustedSecurity,
         gateWalk: gateWalk,
+        boardingBuffer: boardingBuffer,
         bagBuffer: bagBuffer,
         intlBuffer: intlBuffer,
         partyBuffer: partyBuffer,
@@ -2881,13 +2900,16 @@
       var bufferExplainer = document.getElementById('bufferExplainer');
       if (bufferExplainer) {
         if (spare > 0) {
-          bufferExplainer.textContent = 'You have approximately ' + spare + ' minutes of buffer before your flight closes.';
+          bufferExplainer.textContent = 'Your leave time gets you to the gate before boarding begins — not scrambling to your seat as the doors close.';
           bufferExplainer.style.color = '';
         } else {
           bufferExplainer.textContent = 'You are cutting it extremely close. Leave immediately.';
           bufferExplainer.style.color = 'var(--danger)';
         }
       }
+
+      // Show security reassurance note
+      document.getElementById('securityNote').style.display = 'block';
 
       // Step 7 — Show post-result sections
       var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
@@ -2951,7 +2973,8 @@
         { label: 'Drive', value: breakdown.adjustedDrive },
         { label: 'Parking', value: breakdown.parkingBuffer },
         { label: 'Security', value: breakdown.adjustedSecurity },
-        { label: 'Gate', value: breakdown.gateWalk }
+        { label: 'Gate', value: breakdown.gateWalk },
+        { label: 'Boarding', value: 35 }
       ];
 
       if (breakdown.bagBuffer > 0) chips.push({ label: 'Bags', value: breakdown.bagBuffer });
