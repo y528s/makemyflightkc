@@ -2060,6 +2060,14 @@
           }
         }, 400 + (i * 150));
       });
+
+      // Show recalculate button
+      var recalcBtn = document.getElementById('recalculateBtn');
+      if (recalcBtn) recalcBtn.style.display = 'block';
+    }
+
+    function recalculate() {
+      document.getElementById('calculatorForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /* ============================================
