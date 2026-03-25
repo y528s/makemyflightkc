@@ -1613,11 +1613,10 @@
       e.preventDefault();
       var email = document.getElementById('flightLookupEmail').value;
       if (!email) return;
-      /* TODO: Replace FLIGHT_LOOKUP_FORM_ID with your Formspree form ID for flight lookup waitlist */
-      fetch('https://formspree.io/f/FLIGHT_LOOKUP_FORM_ID', {
+      fetch('https://formspree.io/f/mlgorllg', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ email: email, form_type: 'flight_lookup' })
       }).then(function () {
         document.getElementById('flightLookupSuccess').style.display = 'block';
         document.getElementById('flightLookupForm').style.display = 'none';
@@ -2231,11 +2230,11 @@
 
         var utmSource = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
 
-        /* TODO: Replace YOUR_SETTLE_FORM_ID with your Formspree form ID for settle the argument */
-        fetch('https://formspree.io/f/YOUR_SETTLE_FORM_ID', {
+        fetch('https://formspree.io/f/mlgorllg', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            form_type: 'settle_argument',
             recipient_email: recipientEmail.value,
             sender_email: senderInput.value || '',
             leave_time: currentLeaveTime,
