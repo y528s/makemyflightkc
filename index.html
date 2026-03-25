@@ -1110,8 +1110,8 @@
 
     <!-- Hero -->
     <section style="text-align:center;padding:0 0 32px;">
-      <h2 style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Don't miss your flight.</h2>
-      <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">Tell me your flight time. I'll tell you exactly when to leave.</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Every KC traveler has asked this question. Now there's an answer.</h2>
+      <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. This settles it.</p>
       <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--muted);margin-top:16px;">Built by a Kansas Citian. Free forever. No ads.</p>
     </section>
 
@@ -1324,7 +1324,7 @@
       <div class="card">
         <h2 style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
         <p class="card-subhead">This took 7 seconds. Help a Kansas Citian make their flight.</p>
-        <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send to My Driver</button>
+        <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send via WhatsApp</button>
         <div class="share-grid-2">
           <button id="facebookBtn" class="share-btn share-btn-facebook" onclick="shareFacebook()">Facebook</button>
           <button id="twitterBtn" class="share-btn share-btn-twitter" onclick="shareTwitter()">Twitter / X</button>
@@ -2209,9 +2209,7 @@
        ============================================ */
     function shareWhatsApp() {
       var msg = encodeURIComponent(
-        'I need to leave by ' + currentLeaveTime +
-        ' for my ' + currentFlightTime + ' MCI flight. Calculate yours: ' +
-        'https://makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
+        'There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. I just calculated my MCI leave time — you should too. One of us is very wrong. makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
       );
       window.open('https://wa.me/?text=' + msg, '_blank');
       if (typeof gtag === 'function') gtag('event', 'whatsapp_shared');
