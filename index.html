@@ -54,18 +54,25 @@
     }
 
     [data-theme="light"] {
-      --bg: #f7f4ee;
+      --bg: #f0f4ff;
       --surface: #ffffff;
-      --text: #1a1a2e;
-      --text-muted: #6b7280;
-      --card-bg: #ffffff;
-      --card-bd: #e5e0d5;
-      --input-bg: #ffffff;
-      --input-bd: #e5e0d5;
-      --pill-bd: #e5e0d5;
-      --gold: #f0b429;
-      --gold-light: #fcd84a;
-      --muted: #6b7280;
+      --navy: #0a1628;
+      --text: #0a1628;
+      --text-muted: #4a5568;
+      --card-bg: rgba(255,255,255,0.9);
+      --card-bd: #dde3f0;
+      --input-bg: #f7f9ff;
+      --input-bd: #c8d0e4;
+      --pill-bd: #c8d0e4;
+      --gold: #d4920a;
+      --gold-light: #e8a812;
+      --muted: #4a5568;
+      --white: #0a1628;
+      --cream: #2d3748;
+      --runway: #e8edf8;
+      --sky-mid: #dde3f0;
+      --card: rgba(255,255,255,0.9);
+      --card-border: #dde3f0;
       --toggle-icon-display-sun: block;
       --toggle-icon-display-moon: none;
     }
@@ -108,7 +115,8 @@
     }
 
     [data-theme="light"] body {
-      background: #f7f4ee;
+      background: linear-gradient(180deg, #e8edf8 0%, #f0f4ff 40%, #f7f9ff 100%);
+      color: #0a1628;
     }
 
     /* ============================================
@@ -285,7 +293,9 @@
     }
 
     [data-theme="light"] .card {
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #dde3f0;
+      box-shadow: 0 2px 20px rgba(10,22,40,0.06);
     }
 
     .card + .card {
@@ -469,7 +479,7 @@
     }
 
     [data-theme="light"] .sticky-bottom {
-      background: linear-gradient(to top, #f7f4ee 60%, transparent);
+      background: linear-gradient(to top, #f0f4ff 60%, transparent);
     }
 
     /* ============================================
@@ -554,7 +564,8 @@
 
     [data-theme="light"] .autocomplete-list {
       background: #ffffff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid #c8d0e4;
+      box-shadow: 0 8px 24px rgba(10,22,40,0.1);
     }
 
     .autocomplete-item {
@@ -847,8 +858,8 @@
     }
 
     [data-theme="light"] .share-btn-cal {
-      background: white;
-      border: 1px solid #e5e0d5;
+      background: #f0f4ff;
+      border: 1px solid #c8d0e4;
       color: #0a1628;
     }
 
@@ -1168,6 +1179,80 @@
       cursor: pointer;
       margin: 0;
       text-decoration: underline;
+    }
+
+    /* ============================================
+       LIGHT MODE OVERRIDES
+       ============================================ */
+    [data-theme="light"] input,
+    [data-theme="light"] select {
+      background: #f7f9ff;
+      border: 1px solid #c8d0e4;
+      color: #0a1628;
+    }
+    [data-theme="light"] input:focus,
+    [data-theme="light"] select:focus {
+      border-color: #d4920a;
+      background: #fffdf5;
+    }
+    [data-theme="light"] .pill,
+    [data-theme="light"] .seg-btn {
+      border-color: #c8d0e4;
+      color: #4a5568;
+      background: transparent;
+    }
+    [data-theme="light"] .result-card {
+      background: linear-gradient(135deg, rgba(212,146,10,0.1), rgba(212,146,10,0.03));
+      border: 1px solid rgba(212,146,10,0.25);
+    }
+    [data-theme="light"] #leaveTimeNumber {
+      color: #d4920a;
+    }
+    [data-theme="light"] .autocomplete-item:hover,
+    [data-theme="light"] .autocomplete-item.focused {
+      background: #f0f4ff;
+    }
+    [data-theme="light"] .tooltip-box {
+      background: #0a1628;
+      border-color: #1a2a4a;
+      color: #f0f4ff;
+    }
+    [data-theme="light"] .fb-modal-card {
+      background: #ffffff;
+      border-color: #dde3f0;
+    }
+    [data-theme="light"] .fb-copy-box {
+      background: #f0f4ff;
+      border-color: #c8d0e4;
+      color: #0a1628;
+    }
+    [data-theme="light"] .kofi-card {
+      background: rgba(255,95,95,0.04);
+      border-color: rgba(255,95,95,0.15);
+    }
+    [data-theme="light"] h2,
+    [data-theme="light"] h3 {
+      color: #0a1628;
+    }
+    [data-theme="light"] .step-badge {
+      border-color: #d4920a;
+      color: #d4920a;
+    }
+    [data-theme="light"] .step-title h3 {
+      color: #d4920a;
+    }
+    [data-theme="light"] .drive-time-pill {
+      background: #f0f4ff;
+      border-color: #c8d0e4;
+      color: #4a5568;
+    }
+    [data-theme="light"] .result-tone,
+    [data-theme="light"] .buffer-explainer,
+    [data-theme="light"] .viral-nudge,
+    [data-theme="light"] .share-prompt,
+    [data-theme="light"] .copy-link,
+    [data-theme="light"] .recalculate-link {
+      color: #4a5568;
     }
   </style>
 </head>
