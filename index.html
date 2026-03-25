@@ -639,38 +639,6 @@
       margin-top: 8px;
     }
 
-    /* Flight input toggle tabs */
-    .flight-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .flight-tab {
-      flex: 1;
-      min-height: 48px;
-      border: 1px solid var(--pill-bd);
-      border-radius: var(--radius-pill);
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-      cursor: pointer;
-      transition: var(--transition);
-      padding: 10px 16px;
-    }
-
-    .flight-tab.active {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0a1628;
-      font-weight: 600;
-    }
-
-    .flight-tab:hover:not(.active) {
-      border-color: var(--gold);
-    }
-
     /* Calculate button mobile sticky */
     @media (max-width: 560px) {
       #calculateBtn {
@@ -1048,6 +1016,76 @@
       margin-top: 24px;
       margin-bottom: 0;
     }
+
+    /* Tooltips */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip-icon {
+      font-size: 0.7rem;
+      color: var(--muted);
+      cursor: help;
+      margin-left: 4px;
+      vertical-align: super;
+    }
+    .tooltip-box {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--sky-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: var(--cream);
+      max-width: 240px;
+      width: max-content;
+      z-index: 100;
+      line-height: 1.5;
+      text-align: left;
+      pointer-events: none;
+    }
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap.active .tooltip-box {
+      display: block;
+    }
+
+    /* Recalculate link */
+    .recalculate-link {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 8px;
+      text-decoration: underline;
+      margin-bottom: 8px;
+    }
+    .recalculate-link:hover {
+      color: var(--gold);
+    }
+
+    /* Buffer explainer */
+    .buffer-explainer {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    /* Viral nudge */
+    .viral-nudge {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 8px 0 4px;
+    }
+    .viral-nudge-link {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -1114,24 +1152,7 @@
           <span class="step-badge">2</span>
           <h3>Your flight</h3>
         </div>
-        <div class="flight-tabs">
-          <button type="button" class="flight-tab active" data-panel="flightTimePanel">Enter departure time</button>
-          <button type="button" class="flight-tab" data-panel="flightLookupPanel">Look up by flight number</button>
-        </div>
-        <div id="flightTimePanel">
-          <input type="datetime-local" id="flightDateTime">
-        </div>
-        <div id="flightLookupPanel" style="display:none;">
-          <input type="text" id="flightNumberInput" placeholder="e.g. WN 1234" autocomplete="off">
-          <div style="margin-top:16px;padding:16px;border-radius:var(--radius-input);background:var(--input-bg);border:1px solid var(--input-bd);">
-            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Flight lookup is coming. Drop your email and we'll let you know when it's live.</p>
-            <form id="flightLookupForm" autocomplete="off">
-              <input type="email" id="flightLookupEmail" placeholder="your@email.com" style="margin-bottom:10px;">
-              <button type="submit" class="btn-primary">Notify Me</button>
-            </form>
-            <p id="flightLookupSuccess" style="display:none;font-size:0.9rem;color:var(--success);margin-top:8px;">You're on the list ✈️</p>
-          </div>
-        </div>
+        <input type="datetime-local" id="flightDateTime">
       </div>
 
       <!-- Step 3: Security lane -->
@@ -1141,9 +1162,9 @@
           <h3>Security lane</h3>
         </div>
         <div class="seg-control" id="securityControl">
-          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard</button>
-          <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck</button>
-          <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR</button>
+          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
+          <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Enrolled members keep shoes, laptops, and liquids in their bag. Average wait at MCI: 4-5 minutes. Costs $78 for 5 years at tsa.gov/precheck — worth it if you fly more than twice a year.</span></span></button>
+          <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Biometric screening that skips the ID check queue — you still go through TSA screening after. Average wait at MCI: 3-4 minutes. Available at 3 MCI checkpoints. Learn more at clearme.com</span></span></button>
         </div>
         <p class="note-text">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
@@ -1278,11 +1299,15 @@
         <span id="leaveTimeNumber"></span>
         <span id="leaveTimePeriod" class="period"></span>
       </div>
+      <p class="viral-nudge" id="viralNudge" style="display:none;">Know someone who always cuts it close? <span class="viral-nudge-link" onclick="shareWhatsApp()">Send them this ✈️</span></p>
       <p id="flightTimeSubtext" class="flight-subtext"></p>
       <div id="statusPill" class="status-pill"></div>
+      <p id="bufferExplainer" class="buffer-explainer"></p>
       <div id="breakdownChips" class="breakdown-chips"></div>
       <p id="resultTone" class="result-tone"></p>
     </div>
+
+    <p id="recalculateBtn" class="recalculate-link" style="display:none;" onclick="recalculate()">↑ Adjust my inputs</p>
 
     <!-- Ko-fi Section -->
     <div id="kofiSection" style="display:none;">
@@ -1359,6 +1384,16 @@
         <p style="color:var(--text-muted);margin-top:8px;line-height:1.7;">This isn't a generic airport tool. It's calibrated to MCI's layout, KC's traffic patterns (yes, including Chiefs and Royals game days), and the quirks of flying out of a mid-size hub. Built with love by Yosef Silver. Questions or feedback? departures@makemyflightkc.com</p>
       </div>
     </section>
+
+    <!-- Always-visible Ko-fi -->
+    <div style="margin-top:48px;">
+      <div class="card kofi-card">
+        <p class="kofi-top">Find this useful?</p>
+        <p class="kofi-sub">It's free, ad-free, and built by a KC local. If it saves you a stress spiral — coffee keeps it running.</p>
+        <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
+        <p class="kofi-fine">100% goes to keeping this free.</p>
+      </div>
+    </div>
 
   </div>
 
@@ -1532,7 +1567,8 @@
       "Lawson": 40,
       "Richmond": 50,
       "Pleasant Hill": 48,
-      "Drexel": 62
+      "Drexel": 62,
+      "Zona Rosa": 16
     };
 
     var ALIASES = {
@@ -1712,21 +1748,9 @@
     })();
 
     /* ============================================
-       FLIGHT INPUT TABS
+       SET DEFAULT FLIGHT DATETIME
        ============================================ */
-    (function initFlightTabs() {
-      var tabs = document.querySelectorAll('.flight-tab');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          tabs.forEach(function (t) { t.classList.remove('active'); });
-          tab.classList.add('active');
-          document.getElementById('flightTimePanel').style.display = 'none';
-          document.getElementById('flightLookupPanel').style.display = 'none';
-          document.getElementById(tab.getAttribute('data-panel')).style.display = 'block';
-        });
-      });
-
-      // Set default datetime to tomorrow at 09:00
+    (function initFlightDateTime() {
       var tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       tomorrow.setHours(9, 0, 0, 0);
@@ -1735,28 +1759,6 @@
       var d = String(tomorrow.getDate()).padStart(2, '0');
       document.getElementById('flightDateTime').value = y + '-' + m + '-' + d + 'T09:00';
     })();
-
-    /* ============================================
-       FLIGHT LOOKUP EMAIL (FORMSPREE)
-       ============================================ */
-    document.getElementById('flightLookupForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var email = document.getElementById('flightLookupEmail').value;
-      if (!email) return;
-      /* TODO: Replace FLIGHT_LOOKUP_FORM_ID with your Formspree form ID for flight lookup waitlist */
-      fetch('https://formspree.io/f/FLIGHT_LOOKUP_FORM_ID', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
-      }).then(function () {
-        document.getElementById('flightLookupSuccess').style.display = 'block';
-        document.getElementById('flightLookupForm').style.display = 'none';
-        if (typeof gtag === 'function') gtag('event', 'flight_lookup_email_captured');
-      }).catch(function () {
-        document.getElementById('flightLookupSuccess').style.display = 'block';
-        document.getElementById('flightLookupForm').style.display = 'none';
-      });
-    });
 
     /* ============================================
        SECURITY LANE SEGMENTED CONTROL
