@@ -1197,6 +1197,146 @@
       color: #4a5568;
     }
 
+    /* Floating feedback button */
+    .feedback-float-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--gold);
+      color: #0a1628;
+      border: none;
+      border-radius: 100px;
+      padding: 12px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 900;
+    }
+    .feedback-float-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    @media (max-width: 560px) {
+      .feedback-float-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 16px;
+        font-size: 0.78rem;
+      }
+    }
+
+    /* Feedback modal */
+    .feedback-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .feedback-modal-card {
+      background: var(--sky-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+    }
+    [data-theme="light"] .feedback-modal-card {
+      background: #ffffff;
+      border-color: #dde3f0;
+    }
+    .feedback-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .feedback-modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--white);
+      margin: 0;
+    }
+    [data-theme="light"] .feedback-modal-title {
+      color: #0a1628;
+    }
+    .feedback-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color 0.2s;
+    }
+    .feedback-modal-close:hover {
+      color: var(--white);
+    }
+    .feedback-type-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .feedback-input {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    .feedback-textarea {
+      width: 100%;
+      resize: vertical;
+      margin-bottom: 16px;
+      min-height: 100px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      padding: 12px 14px;
+      transition: border-color 0.2s;
+    }
+    [data-theme="light"] .feedback-textarea {
+      background: #f7f9ff;
+      border-color: #c8d0e4;
+      color: #0a1628;
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .feedback-submit {
+      width: 100%;
+      background: var(--gold);
+      color: #0a1628;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      margin-bottom: 10px;
+    }
+    .feedback-submit:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+    .feedback-fine {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
     /* ============================================
        LIGHT MODE OVERRIDES
        ============================================ */
@@ -2594,6 +2734,75 @@
       });
     })();
 
+    /* ============================================
+       FEEDBACK MODAL
+       ============================================ */
+    var selectedFeedbackType = 'feedback';
+
+    function setFeedbackType(btn, type) {
+      selectedFeedbackType = type;
+      document.querySelectorAll('.feedback-type-pills .pill').forEach(function (p) {
+        p.classList.remove('active');
+      });
+      btn.classList.add('active');
+    }
+
+    function openFeedbackModal() {
+      document.getElementById('feedbackModal').style.display = 'flex';
+    }
+
+    function closeFeedbackModal(e) {
+      if (!e || e.target === document.getElementById('feedbackModal')) {
+        document.getElementById('feedbackModal').style.display = 'none';
+      }
+    }
+
+    function submitFeedback() {
+      var email = document.getElementById('feedbackEmail').value.trim();
+      var message = document.getElementById('feedbackMessage').value.trim();
+
+      if (!email) { alert('Please enter your email.'); return; }
+      if (!message) { alert('Please enter a message.'); return; }
+
+      fetch('https://formspree.io/f/mlgorllg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          message: message,
+          type: selectedFeedbackType,
+          form_type: 'feedback',
+          source: 'floating_feedback_button'
+        })
+      }).then(function () {
+        document.getElementById('feedbackMessage').innerHTML = '<p style="color:var(--success);text-align:center;padding:20px 0;">✓ Sent! Thanks for reaching out.</p>';
+        document.getElementById('feedbackEmail').style.display = 'none';
+        document.querySelector('.feedback-submit').style.display = 'none';
+        document.querySelector('.feedback-type-pills').style.display = 'none';
+        setTimeout(closeFeedbackModal, 2000);
+      }).catch(function () {
+        alert('Something went wrong. Email us directly at departures@makemyflightkc.com');
+      });
+
+      if (typeof gtag === 'function') gtag('event', 'feedback_submitted', { feedback_type: selectedFeedbackType });
+    }
+
+    /* Hide feedback button on mobile when calculate button is visible */
+    (function initFeedbackObserver() {
+      var calcBtn = document.getElementById('calculateBtn');
+      var feedbackBtn = document.getElementById('feedbackFloatBtn');
+      if (calcBtn && feedbackBtn) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (window.innerWidth < 560) {
+              feedbackBtn.style.display = entry.isIntersecting ? 'none' : 'block';
+            }
+          });
+        }, { threshold: 0.1 });
+        observer.observe(calcBtn);
+      }
+    })();
+
   </script>
 
   <!-- Facebook Share Modal -->
@@ -2606,6 +2815,28 @@
         <button class="fb-btn-open" onclick="openFacebook()">Open Facebook</button>
       </div>
       <p class="fb-modal-dismiss" onclick="closeFbModal()">Cancel</p>
+    </div>
+  </div>
+
+  <!-- Floating Feedback Button -->
+  <button id="feedbackFloatBtn" class="feedback-float-btn" onclick="openFeedbackModal()">💬 Feedback</button>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="feedback-modal-overlay" style="display:none;" onclick="closeFeedbackModal(event)">
+    <div class="feedback-modal-card">
+      <div class="feedback-modal-header">
+        <h3 class="feedback-modal-title">Get in touch</h3>
+        <button class="feedback-modal-close" onclick="closeFeedbackModal()">✕</button>
+      </div>
+      <div class="feedback-type-pills">
+        <button class="pill active" data-type="feedback" onclick="setFeedbackType(this,'feedback')">Feedback</button>
+        <button class="pill" data-type="marketing" onclick="setFeedbackType(this,'marketing')">Marketing</button>
+        <button class="pill" data-type="press" onclick="setFeedbackType(this,'press')">Press</button>
+      </div>
+      <input type="email" id="feedbackEmail" placeholder="your@email.com" class="feedback-input">
+      <textarea id="feedbackMessage" placeholder="What's on your mind?" class="feedback-textarea" rows="4"></textarea>
+      <button class="feedback-submit" onclick="submitFeedback()">Send it</button>
+      <p class="feedback-fine">We read everything. Usually reply within 24 hours.</p>
     </div>
   </div>
 
