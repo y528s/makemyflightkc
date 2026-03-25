@@ -2041,6 +2041,18 @@
       // Step 6 — Render result
       renderResult(currentBreakdown, displayHour, displayMin, period, currentFlightTime, statusText, statusClass, toneText);
 
+      // Buffer explainer
+      var bufferExplainer = document.getElementById('bufferExplainer');
+      if (bufferExplainer) {
+        if (spare > 0) {
+          bufferExplainer.textContent = 'You have approximately ' + spare + ' minutes of buffer before your flight closes.';
+          bufferExplainer.style.color = '';
+        } else {
+          bufferExplainer.textContent = 'You are cutting it extremely close. Leave immediately.';
+          bufferExplainer.style.color = 'var(--danger)';
+        }
+      }
+
       // Step 7 — Show post-result sections
       var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
       sectionsToShow.forEach(function (id, i) {
