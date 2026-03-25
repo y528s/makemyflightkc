@@ -1178,8 +1178,31 @@
         <p id="copyBtn" class="copy-link" onclick="copyToClipboard()">Copy to clipboard</p>
       </div>
     </div>
-    <div id="emailCapture" style="display:none;"></div>
-    <div id="kofiSection" style="display:none;"></div>
+    <div id="emailCapture" style="display:none;">
+      <div class="card" style="padding:32px;text-align:center;">
+        <h2 style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--white);">Settle the argument.</h2>
+        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1rem;color:var(--cream);line-height:1.7;max-width:480px;margin:0 auto 24px;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. Send them this — let the calculator decide.</p>
+        <div id="emailFormWrap">
+          <input type="email" id="recipientEmail" placeholder="Their email (or yours)">
+          <div style="margin-top:10px;display:flex;align-items:center;gap:8px;justify-content:center;">
+            <input type="checkbox" id="sendMeCopy" style="width:auto;min-height:auto;">
+            <label for="sendMeCopy" style="font-size:0.85rem;color:var(--muted);cursor:pointer;">Send me a copy too</label>
+          </div>
+          <input type="email" id="senderEmail" placeholder="Your email" style="display:none;margin-top:10px;">
+          <button type="button" id="sendEmailBtn" style="display:block;width:100%;background:var(--gold);color:#0a1628;border-radius:14px;padding:16px;font-weight:700;font-size:1rem;margin-top:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">Send It ✈️</button>
+          <p style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;">By submitting your email you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Privacy Policy</a>. We never sell your data.</p>
+        </div>
+        <p id="emailSuccess" style="display:none;color:var(--success);font-weight:500;font-size:1rem;margin-top:16px;">✈️ Sent! The calculator has spoken.</p>
+      </div>
+    </div>
+    <div id="kofiSection" style="display:none;">
+      <div class="card" style="padding:32px;text-align:center;background:rgba(255,255,255,0.02);">
+        <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;color:var(--white);margin-bottom:6px;">Free. No ads. No upsell.</p>
+        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.9rem;color:var(--muted);margin-bottom:20px;">If it helped — a coffee keeps it running.</p>
+        <a href="https://ko-fi.com/ysilver" target="_blank" rel="noopener" id="kofiBtn" style="display:block;width:100%;background:#ff5f5f;color:white;border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;transition:background 0.2s,transform 0.2s;">☕ Buy me a coffee — $3</a>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:8px;">100% goes to keeping this free.</p>
+      </div>
+    </div>
 
     <!-- About / SEO Section -->
     <section style="border-top:1px solid var(--card-bd);margin-top:48px;padding-top:40px;">
@@ -2170,6 +2193,68 @@
         }, 2000);
       });
     }
+
+    /* ============================================
+       EMAIL CAPTURE — SETTLE THE ARGUMENT
+       ============================================ */
+    (function initEmailCapture() {
+      var checkbox = document.getElementById('sendMeCopy');
+      var senderInput = document.getElementById('senderEmail');
+
+      checkbox.addEventListener('change', function () {
+        senderInput.style.display = checkbox.checked ? 'block' : 'none';
+      });
+
+      document.getElementById('sendEmailBtn').addEventListener('click', function () {
+        var recipientEmail = document.getElementById('recipientEmail');
+        if (!recipientEmail.value) {
+          alert('Please enter an email address');
+          return;
+        }
+
+        var utmSource = new URLSearchParams(window.location.search).get('utm_source') || 'direct';
+
+        /* TODO: Replace YOUR_SETTLE_FORM_ID with your Formspree form ID for settle the argument */
+        fetch('https://formspree.io/f/YOUR_SETTLE_FORM_ID', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            recipient_email: recipientEmail.value,
+            sender_email: senderInput.value || '',
+            leave_time: currentLeaveTime,
+            flight_time: currentFlightTime,
+            neighborhood: document.getElementById('neighborhoodInput').value,
+            utm_source: utmSource,
+            message: 'Leave by ' + currentLeaveTime + ' for ' + currentFlightTime + ' MCI flight. Full breakdown at makemyflightkc.com'
+          })
+        }).then(function () {
+          document.getElementById('emailFormWrap').style.display = 'none';
+          document.getElementById('emailSuccess').style.display = 'block';
+          if (typeof gtag === 'function') gtag('event', 'email_sent');
+        }).catch(function () {
+          document.getElementById('emailFormWrap').style.display = 'none';
+          document.getElementById('emailSuccess').style.display = 'block';
+        });
+      });
+    })();
+
+    /* ============================================
+       KO-FI BUTTON HOVER + TRACKING
+       ============================================ */
+    (function initKofi() {
+      var btn = document.getElementById('kofiBtn');
+      btn.addEventListener('mouseenter', function () {
+        btn.style.background = '#ff4444';
+        btn.style.transform = 'translateY(-2px)';
+      });
+      btn.addEventListener('mouseleave', function () {
+        btn.style.background = '#ff5f5f';
+        btn.style.transform = 'translateY(0)';
+      });
+      btn.addEventListener('click', function () {
+        if (typeof gtag === 'function') gtag('event', 'kofi_clicked');
+      });
+    })();
 
     /* ============================================
        DISCLAIMER TOGGLE
