@@ -493,6 +493,200 @@
         padding: 0;
       }
     }
+
+    /* ============================================
+       CALCULATOR FORM
+       ============================================ */
+    .calc-form {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .step-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .step-title h3 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--gold);
+      font-size: 1.2rem;
+      font-weight: 400;
+    }
+
+    /* Autocomplete dropdown */
+    .autocomplete-wrap {
+      position: relative;
+    }
+
+    .autocomplete-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-input);
+      margin-top: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    [data-theme="dark"] .autocomplete-list {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    [data-theme="light"] .autocomplete-list {
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .autocomplete-item {
+      padding: 12px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .autocomplete-item:hover,
+    .autocomplete-item.focused {
+      background: rgba(240, 180, 41, 0.08);
+    }
+
+    .autocomplete-item mark {
+      background: none;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .drive-time-pill {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Segmented control for security */
+    .seg-control {
+      display: flex;
+      width: 100%;
+    }
+
+    .seg-btn {
+      flex: 1;
+      min-height: 48px;
+      border: 1px solid var(--card-bd);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+      font-weight: 400;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 10px 8px;
+    }
+
+    .seg-btn:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+
+    .seg-btn:last-child {
+      border-radius: 0 10px 10px 0;
+    }
+
+    .seg-btn:not(:first-child) {
+      border-left: none;
+    }
+
+    .seg-btn.active {
+      background: var(--gold);
+      color: #0a1628;
+      font-weight: 600;
+      border-color: var(--gold);
+    }
+
+    .seg-btn.active + .seg-btn {
+      border-left-color: var(--gold);
+    }
+
+    .note-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* Flight input toggle tabs */
+    .flight-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .flight-tab {
+      flex: 1;
+      min-height: 48px;
+      border: 1px solid var(--pill-bd);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 10px 16px;
+    }
+
+    .flight-tab.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0a1628;
+      font-weight: 600;
+    }
+
+    .flight-tab:hover:not(.active) {
+      border-color: var(--gold);
+    }
+
+    /* Calculate button mobile sticky */
+    @media (max-width: 560px) {
+      #calculateBtn {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        border-radius: 0;
+        margin: 0;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -522,64 +716,109 @@
       <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--muted);margin-top:16px;">Built by a Kansas Citian. Free forever. No ads.</p>
     </section>
 
-    <!-- Calculator Form Card -->
-    <section class="card" id="calculatorCard">
-      <h2>When should I leave?</h2>
-      <p class="text-muted mt-sm">Enter your flight details and we'll tell you when to hit the road.</p>
+    <!-- Calculator Form -->
+    <div class="calc-form" id="calculatorForm">
 
-      <form id="calculatorForm" autocomplete="off">
-        <div class="mt-lg">
-          <label class="form-label">Departure Time</label>
-          <input type="time" id="departureTime" placeholder="Select time">
+      <!-- Step 1: Where are you leaving from? -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-badge">1</span>
+          <h3>Where are you leaving from?</h3>
         </div>
-
-        <div class="form-row mt-md">
-          <div>
-            <label class="form-label">Terminal</label>
-            <div class="pill-group">
-              <button type="button" class="pill active">A</button>
-              <button type="button" class="pill">B</button>
-              <button type="button" class="pill">C</button>
-            </div>
-          </div>
-          <div>
-            <label class="form-label">Airline</label>
-            <select id="airline">
-              <option value="" disabled selected>Choose airline</option>
-            </select>
-          </div>
+        <div class="autocomplete-wrap">
+          <input type="text" id="neighborhoodInput" placeholder="Type your neighborhood, city, or zip..." autocomplete="off">
+          <div class="autocomplete-list" id="autocompleteList"></div>
         </div>
-
-        <div class="mt-md">
-          <label class="form-label">Driving From</label>
-          <select id="origin">
-            <option value="" disabled selected>Choose area</option>
-          </select>
+        <div id="driveTimePill" style="display:none;">
+          <span class="drive-time-pill" id="driveTimeText"></span>
         </div>
-
-        <div class="form-row mt-md">
-          <div>
-            <label class="form-label">Bags to Check</label>
-            <div class="pill-group">
-              <button type="button" class="pill active">None</button>
-              <button type="button" class="pill">1-2</button>
-              <button type="button" class="pill">3+</button>
-            </div>
-          </div>
-          <div>
-            <label class="form-label">TSA Type</label>
-            <div class="pill-group">
-              <button type="button" class="pill active">Regular</button>
-              <button type="button" class="pill">Pre✓</button>
-            </div>
+        <div id="customDriveWrap" style="display:none;margin-top:12px;">
+          <label class="form-label">Drive time (minutes)</label>
+          <input type="number" id="customDriveInput" min="1" max="180" placeholder="e.g. 30">
+        </div>
+        <div id="trafficWrap" style="display:none;margin-top:16px;">
+          <label class="form-label">Traffic conditions</label>
+          <div class="pill-group">
+            <button type="button" class="pill active" data-mult="1.0">Clear</button>
+            <button type="button" class="pill" data-mult="1.2">Light</button>
+            <button type="button" class="pill" data-mult="1.4">Moderate</button>
+            <button type="button" class="pill" data-mult="1.6">Heavy</button>
           </div>
         </div>
-      </form>
-    </section>
+      </div>
 
-    <!-- Sticky Calculate Button -->
-    <div class="sticky-bottom mt-md">
-      <button class="btn-primary" id="calculateBtn" type="button">Calculate</button>
+      <!-- Step 2: Your flight -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-badge">2</span>
+          <h3>Your flight</h3>
+        </div>
+        <div class="flight-tabs">
+          <button type="button" class="flight-tab active" data-panel="flightTimePanel">Enter departure time</button>
+          <button type="button" class="flight-tab" data-panel="flightLookupPanel">Look up by flight number</button>
+        </div>
+        <div id="flightTimePanel">
+          <input type="datetime-local" id="flightDateTime">
+        </div>
+        <div id="flightLookupPanel" style="display:none;">
+          <input type="text" id="flightNumberInput" placeholder="e.g. WN 1234" autocomplete="off">
+          <div style="margin-top:16px;padding:16px;border-radius:var(--radius-input);background:var(--input-bg);border:1px solid var(--input-bd);">
+            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Flight lookup is coming. Drop your email and we'll let you know when it's live.</p>
+            <form id="flightLookupForm" autocomplete="off">
+              <input type="email" id="flightLookupEmail" placeholder="your@email.com" style="margin-bottom:10px;">
+              <button type="submit" class="btn-primary">Notify Me</button>
+            </form>
+            <p id="flightLookupSuccess" style="display:none;font-size:0.9rem;color:var(--success);margin-top:8px;">You're on the list ✈️</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Security lane -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-badge">3</span>
+          <h3>Security lane</h3>
+        </div>
+        <div class="seg-control" id="securityControl">
+          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard</button>
+          <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck</button>
+          <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR</button>
+        </div>
+        <p class="note-text">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
+      </div>
+
+      <!-- Step 4: Checking bags? -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-badge">4</span>
+          <h3>Checking bags?</h3>
+        </div>
+        <div class="pill-group" id="bagControl">
+          <button type="button" class="pill active" data-buf="0">No</button>
+          <button type="button" class="pill" data-buf="20">Yes</button>
+        </div>
+      </div>
+
+      <!-- Step 5: How are you getting there? -->
+      <div class="card">
+        <div class="step-title">
+          <span class="step-badge">5</span>
+          <h3>How are you getting there?</h3>
+        </div>
+        <select id="transportMode">
+          <option value="5">Driving — Garage (attached, walkable)</option>
+          <option value="8">Driving — Surface lot</option>
+          <option value="22">Driving — Economy lot (blue shuttle, ~20 min cycle)</option>
+          <option value="15">Driving — Off-site parking (The Parking Spot etc.)</option>
+          <option value="3">Rideshare / Uber / Lyft</option>
+          <option value="2">Being dropped off at curb</option>
+        </select>
+        <p class="note-text" id="economyNote" style="display:none;">The blue bus runs every 20 minutes 24/7. Budget for a potential wait.</p>
+      </div>
+
+      <!-- Calculate Button -->
+      <button class="btn-primary" id="calculateBtn" type="button" style="margin-top:16px;">Calculate My Leave Time ✈️</button>
+
     </div>
 
     <!-- Result Card (hidden by default, shown after calculation) -->
@@ -697,9 +936,333 @@
     })();
 
     /* ============================================
-       PILL TOGGLE BEHAVIOR
+       DRIVE TIMES DATA
+       ============================================ */
+    var DRIVE_TIMES = {
+      "Downtown KC / River Market": 22,
+      "Crossroads / Midtown": 24,
+      "Westport": 26,
+      "Country Club Plaza": 28,
+      "Brookside": 30,
+      "Waldo": 32,
+      "Hyde Park": 27,
+      "Southmoreland": 28,
+      "Northeast KC": 20,
+      "Northland / North KC": 18,
+      "Gladstone": 16,
+      "Liberty": 22,
+      "Claycomo": 12,
+      "Riverside": 14,
+      "Parkville": 18,
+      "Platte City": 20,
+      "Platte County": 22,
+      "Kearney": 30,
+      "Excelsior Springs": 38,
+      "Raytown": 30,
+      "Independence": 32,
+      "Blue Springs": 38,
+      "Lee's Summit": 40,
+      "Grandview": 35,
+      "Belton": 42,
+      "Raymore": 44,
+      "Peculiar": 50,
+      "Harrisonville": 55,
+      "Grain Valley": 42,
+      "Oak Grove": 45,
+      "Odessa": 50,
+      "Prairie Village": 30,
+      "Mission Hills": 28,
+      "Mission": 26,
+      "Fairway": 27,
+      "Roeland Park": 25,
+      "Westwood": 26,
+      "Leawood (north)": 32,
+      "Leawood (south)": 36,
+      "Overland Park (north)": 30,
+      "Overland Park (central)": 35,
+      "Overland Park (south)": 38,
+      "Overland Park (far south)": 42,
+      "Lenexa (north)": 32,
+      "Lenexa (south)": 36,
+      "Shawnee (east)": 28,
+      "Shawnee (west)": 32,
+      "Merriam": 26,
+      "Stilwell": 44,
+      "Spring Hill": 48,
+      "Gardner": 50,
+      "Olathe (north)": 36,
+      "Olathe (central)": 40,
+      "Olathe (south)": 44,
+      "De Soto": 42,
+      "Edgerton": 50,
+      "Kansas City KS (downtown)": 20,
+      "Kansas City KS (central)": 22,
+      "Bonner Springs": 28,
+      "Edwardsville": 26,
+      "Lansing": 30,
+      "Leavenworth": 38,
+      "Lawrence (east)": 55,
+      "Lawrence (central / KU)": 58,
+      "Lawrence (west)": 62,
+      "Topeka": 90,
+      "Smithville": 28,
+      "Holt": 35,
+      "Lawson": 40,
+      "Richmond": 50,
+      "Pleasant Hill": 48,
+      "Drexel": 62
+    };
+
+    var ALIASES = {
+      "OP": ["Overland Park (north)", "Overland Park (central)", "Overland Park (south)", "Overland Park (far south)"],
+      "KCK": ["Kansas City KS (downtown)", "Kansas City KS (central)"],
+      "KCMO": ["Downtown KC / River Market", "Crossroads / Midtown", "Westport", "Country Club Plaza", "Brookside", "Waldo", "Hyde Park", "Southmoreland", "Northeast KC"],
+      "JOCO": ["Prairie Village", "Mission Hills", "Mission", "Fairway", "Roeland Park", "Westwood", "Leawood (north)", "Leawood (south)", "Overland Park (north)", "Overland Park (central)", "Overland Park (south)", "Overland Park (far south)", "Lenexa (north)", "Lenexa (south)", "Shawnee (east)", "Shawnee (west)", "Merriam", "Stilwell", "Spring Hill", "Gardner", "Olathe (north)", "Olathe (central)", "Olathe (south)", "De Soto", "Edgerton"],
+      "Northland": ["Gladstone", "Liberty", "Smithville", "Kearney", "Parkville", "Northland / North KC"],
+      "Plaza": ["Country Club Plaza"],
+      "Crossroads": ["Crossroads / Midtown"],
+      "River Market": ["Downtown KC / River Market"],
+      "Leawood": ["Leawood (north)", "Leawood (south)"],
+      "Lenexa": ["Lenexa (north)", "Lenexa (south)"],
+      "Shawnee": ["Shawnee (east)", "Shawnee (west)"],
+      "Lawrence": ["Lawrence (east)", "Lawrence (central / KU)", "Lawrence (west)"],
+      "Olathe": ["Olathe (north)", "Olathe (central)", "Olathe (south)"]
+    };
+
+    var selectedDriveTime = null;
+    var trafficMultiplier = 1.0;
+    var allPlaces = Object.keys(DRIVE_TIMES);
+
+    /* ============================================
+       AUTOCOMPLETE
+       ============================================ */
+    (function initAutocomplete() {
+      var input = document.getElementById('neighborhoodInput');
+      var list = document.getElementById('autocompleteList');
+      var pillWrap = document.getElementById('driveTimePill');
+      var pillText = document.getElementById('driveTimeText');
+      var trafficWrap = document.getElementById('trafficWrap');
+      var customWrap = document.getElementById('customDriveWrap');
+      var customInput = document.getElementById('customDriveInput');
+      var focusIdx = -1;
+
+      function getMatches(query) {
+        var q = query.toLowerCase();
+        var matched = new Set();
+
+        // Check aliases first
+        Object.keys(ALIASES).forEach(function (alias) {
+          if (alias.toLowerCase().indexOf(q) !== -1) {
+            ALIASES[alias].forEach(function (p) { matched.add(p); });
+          }
+        });
+
+        // Check place names
+        allPlaces.forEach(function (place) {
+          if (place.toLowerCase().indexOf(q) !== -1) {
+            matched.add(place);
+          }
+        });
+
+        return Array.from(matched).slice(0, 6);
+      }
+
+      function highlightMatch(text, query) {
+        var idx = text.toLowerCase().indexOf(query.toLowerCase());
+        if (idx === -1) return text;
+        return text.substring(0, idx) + '<mark>' + text.substring(idx, idx + query.length) + '</mark>' + text.substring(idx + query.length);
+      }
+
+      function showList(matches, query) {
+        list.innerHTML = '';
+        focusIdx = -1;
+        if (matches.length === 0 && query.length >= 2) {
+          var manual = document.createElement('div');
+          manual.className = 'autocomplete-item';
+          manual.textContent = 'Enter your drive time manually';
+          manual.addEventListener('click', function () {
+            hideList();
+            input.value = 'Custom drive time';
+            customWrap.style.display = 'block';
+            pillWrap.style.display = 'none';
+            trafficWrap.style.display = 'none';
+            customInput.focus();
+          });
+          list.appendChild(manual);
+          list.style.display = 'block';
+          return;
+        }
+        if (matches.length === 0) { hideList(); return; }
+
+        matches.forEach(function (place) {
+          var item = document.createElement('div');
+          item.className = 'autocomplete-item';
+          item.innerHTML = highlightMatch(place, query) + ' <span style="color:var(--muted);font-size:0.8rem;">~' + DRIVE_TIMES[place] + ' min</span>';
+          item.addEventListener('click', function () {
+            selectPlace(place);
+          });
+          list.appendChild(item);
+        });
+        list.style.display = 'block';
+      }
+
+      function hideList() {
+        list.style.display = 'none';
+        focusIdx = -1;
+      }
+
+      function selectPlace(place) {
+        input.value = place;
+        selectedDriveTime = DRIVE_TIMES[place];
+        hideList();
+        customWrap.style.display = 'none';
+        updateDriveTimePill();
+        trafficWrap.style.display = 'block';
+      }
+
+      function updateDriveTimePill() {
+        var adjusted = Math.round(selectedDriveTime * trafficMultiplier);
+        pillText.textContent = '~' + adjusted + ' min to MCI (normal traffic)';
+        if (trafficMultiplier > 1.0) {
+          pillText.textContent = '~' + adjusted + ' min to MCI (' + trafficMultiplier + 'x traffic)';
+        }
+        pillWrap.style.display = 'block';
+      }
+
+      input.addEventListener('input', function () {
+        var val = input.value.trim();
+        if (val.length < 2) { hideList(); return; }
+        var matches = getMatches(val);
+        showList(matches, val);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        var items = list.querySelectorAll('.autocomplete-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          focusIdx = Math.min(focusIdx + 1, items.length - 1);
+          items.forEach(function (it, i) { it.classList.toggle('focused', i === focusIdx); });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          focusIdx = Math.max(focusIdx - 1, 0);
+          items.forEach(function (it, i) { it.classList.toggle('focused', i === focusIdx); });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (focusIdx >= 0 && items[focusIdx]) {
+            items[focusIdx].click();
+          }
+        } else if (e.key === 'Escape') {
+          hideList();
+        }
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.autocomplete-wrap')) hideList();
+      });
+
+      // Custom drive input
+      customInput.addEventListener('input', function () {
+        var val = parseInt(customInput.value);
+        if (val > 0) {
+          selectedDriveTime = val;
+          trafficWrap.style.display = 'block';
+          updateDriveTimePill();
+        }
+      });
+
+      // Traffic multiplier pills
+      var trafficGroup = trafficWrap.querySelector('.pill-group');
+      trafficGroup.addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        trafficGroup.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        trafficMultiplier = parseFloat(pill.getAttribute('data-mult'));
+        if (selectedDriveTime) updateDriveTimePill();
+      });
+    })();
+
+    /* ============================================
+       FLIGHT INPUT TABS
+       ============================================ */
+    (function initFlightTabs() {
+      var tabs = document.querySelectorAll('.flight-tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          document.getElementById('flightTimePanel').style.display = 'none';
+          document.getElementById('flightLookupPanel').style.display = 'none';
+          document.getElementById(tab.getAttribute('data-panel')).style.display = 'block';
+        });
+      });
+
+      // Set default datetime to tomorrow at 09:00
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0);
+      var y = tomorrow.getFullYear();
+      var m = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      var d = String(tomorrow.getDate()).padStart(2, '0');
+      document.getElementById('flightDateTime').value = y + '-' + m + '-' + d + 'T09:00';
+    })();
+
+    /* ============================================
+       FLIGHT LOOKUP EMAIL (FORMSPREE)
+       ============================================ */
+    document.getElementById('flightLookupForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('flightLookupEmail').value;
+      if (!email) return;
+      /* TODO: Replace FLIGHT_LOOKUP_FORM_ID with your Formspree form ID for flight lookup waitlist */
+      fetch('https://formspree.io/f/FLIGHT_LOOKUP_FORM_ID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }).then(function () {
+        document.getElementById('flightLookupSuccess').style.display = 'block';
+        document.getElementById('flightLookupForm').style.display = 'none';
+        if (typeof gtag === 'function') gtag('event', 'flight_lookup_email_captured');
+      }).catch(function () {
+        document.getElementById('flightLookupSuccess').style.display = 'block';
+        document.getElementById('flightLookupForm').style.display = 'none';
+      });
+    });
+
+    /* ============================================
+       SECURITY LANE SEGMENTED CONTROL
+       ============================================ */
+    document.getElementById('securityControl').addEventListener('click', function (e) {
+      var btn = e.target.closest('.seg-btn');
+      if (!btn) return;
+      document.querySelectorAll('#securityControl .seg-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+
+    /* ============================================
+       BAG CONTROL PILLS
+       ============================================ */
+    document.getElementById('bagControl').addEventListener('click', function (e) {
+      var pill = e.target.closest('.pill');
+      if (!pill) return;
+      document.querySelectorAll('#bagControl .pill').forEach(function (p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+    });
+
+    /* ============================================
+       TRANSPORT MODE — ECONOMY LOT NOTE
+       ============================================ */
+    document.getElementById('transportMode').addEventListener('change', function () {
+      document.getElementById('economyNote').style.display = this.value === '22' ? 'block' : 'none';
+    });
+
+    /* ============================================
+       PILL TOGGLE BEHAVIOR (generic, for remaining pill groups)
        ============================================ */
     document.querySelectorAll('.pill-group').forEach(function (group) {
+      if (group.closest('#bagControl') || group.closest('#trafficWrap')) return;
       group.addEventListener('click', function (e) {
         var pill = e.target.closest('.pill');
         if (!pill) return;
@@ -708,6 +1271,14 @@
         });
         pill.classList.add('active');
       });
+    });
+
+    /* ============================================
+       CALCULATE BUTTON (placeholder — logic in Step 5)
+       ============================================ */
+    document.getElementById('calculateBtn').addEventListener('click', function () {
+      if (typeof gtag === 'function') gtag('event', 'calculate_clicked');
+      // calculate() will be implemented in Step 5
     });
 
     /* ============================================
