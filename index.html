@@ -1086,6 +1086,89 @@
       cursor: pointer;
       text-decoration: underline;
     }
+
+    /* Facebook modal */
+    .fb-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .fb-modal-card {
+      background: var(--sky-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+    }
+    .fb-modal-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .fb-copy-box {
+      background: var(--runway);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.85rem;
+      color: var(--cream);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      user-select: all;
+      cursor: text;
+      white-space: pre-wrap;
+    }
+    .fb-modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .fb-btn-copy {
+      background: var(--gold);
+      color: #0a1628;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fb-btn-copy:hover {
+      background: var(--gold-light);
+    }
+    .fb-btn-open {
+      background: #1877F2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .fb-btn-open:hover {
+      opacity: 0.9;
+    }
+    .fb-modal-dismiss {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      margin: 0;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -1357,7 +1440,7 @@
     <!-- About / SEO Section -->
     <section style="border-top:1px solid var(--card-bd);margin-top:48px;padding-top:40px;">
       <h2 style="font-size:1.8rem;color:var(--white);">Why Kansas City needed this</h2>
-      <p style="color:var(--text-muted);margin-top:16px;line-height:1.7;">Make My Flight KC is a free departure calculator built specifically for Kansas City International Airport (MCI). It combines real drive times from KC neighborhoods, TSA security estimates, parking buffer times, and local conditions to tell you exactly when to leave for your flight.</p>
+      <p style="color:var(--text-muted);margin-top:16px;line-height:1.7;">Make My Flight KC is a free departure calculator built specifically for Kansas City International Airport (MCI). It combines real drive times from KC neighborhoods, TSA security estimates, parking buffer times, and local conditions to tell you exactly when to leave for your flight — whether that's tomorrow morning or a trip you're planning next month. If this saved you a stress spiral or helped you make your flight on time, you can say thank you by <a href='https://ko-fi.com/ysilver' target='_blank' style='color:var(--gold);'>buying me a coffee ☕</a> — it keeps the tool free and maintained.</p>
 
       <div style="margin-top:32px;">
         <h3 style="color:var(--gold);font-size:clamp(1.1rem,3vw,1.3rem);">How early should I arrive at MCI?</h3>
@@ -2219,11 +2302,34 @@
        FACEBOOK
        ============================================ */
     function shareFacebook() {
+      document.getElementById('fbModal').style.display = 'flex';
+      if (typeof gtag === 'function') gtag('event', 'facebook_shared');
+    }
+
+    function closeFbModal(e) {
+      if (!e || e.target === document.getElementById('fbModal')) {
+        document.getElementById('fbModal').style.display = 'none';
+      }
+    }
+
+    function copyFbText() {
+      var text = document.getElementById('fbCopyText').textContent.trim();
+      navigator.clipboard.writeText(text);
+      var btn = document.querySelector('.fb-btn-copy');
+      btn.textContent = 'Copied \u2713';
+      btn.style.background = 'var(--success)';
+      setTimeout(function () {
+        btn.textContent = 'Copy Text';
+        btn.style.background = '';
+      }, 2000);
+    }
+
+    function openFacebook() {
       var url = encodeURIComponent(
         'https://makemyflightkc.com?utm_source=facebook&utm_medium=share&utm_campaign=result'
       );
       window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
-      if (typeof gtag === 'function') gtag('event', 'facebook_shared');
+      closeFbModal();
     }
 
     /* ============================================
@@ -2378,5 +2484,19 @@
     })();
 
   </script>
+
+  <!-- Facebook Share Modal -->
+  <div id="fbModal" class="fb-modal-overlay" style="display:none;" onclick="closeFbModal(event)">
+    <div class="fb-modal-card">
+      <h3 class="fb-modal-heading">Copy this, then post to Facebook:</h3>
+      <div class="fb-copy-box" id="fbCopyText">There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it — specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity</div>
+      <div class="fb-modal-buttons">
+        <button class="fb-btn-copy" onclick="copyFbText()">Copy Text</button>
+        <button class="fb-btn-open" onclick="openFacebook()">Open Facebook</button>
+      </div>
+      <p class="fb-modal-dismiss" onclick="closeFbModal()">Cancel</p>
+    </div>
+  </div>
+
 </body>
 </html>
