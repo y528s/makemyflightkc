@@ -1576,7 +1576,7 @@
           <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Enrolled members keep shoes, laptops, and liquids in their bag. Average wait at MCI: 4-5 minutes. Costs $78 for 5 years at tsa.gov/precheck — worth it if you fly more than twice a year.</span></span></button>
           <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Biometric screening that skips the ID check queue — you still go through TSA screening after. Average wait at MCI: 3-4 minutes. Available at 3 MCI checkpoints. Learn more at clearme.com</span></span></button>
         </div>
-        <p class="note-text">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
+        <p class="note-text" id="securityNote">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
 
       <!-- Step 4: Checking bags? -->
@@ -1605,7 +1605,7 @@
           <option value="3">Rideshare / Uber / Lyft</option>
           <option value="2">Being dropped off at curb</option>
         </select>
-        <p class="note-text" id="economyNote" style="display:none;">The blue bus runs every 20 minutes 24/7. Budget for a potential wait.</p>
+        <p class="note-text" id="transportNote" style="display:none;">The blue bus runs every 20 minutes 24/7. Budget for a potential wait.</p>
       </div>
 
       <!-- Advanced Mode Toggle -->
@@ -1622,7 +1622,7 @@
             <button type="button" class="pill" data-buf="30">International</button>
             <button type="button" class="pill" data-buf="50" style="font-size:clamp(0.75rem,2vw,0.85rem);">International w/ Preclearance (Canada, Ireland, UAE)</button>
           </div>
-          <p class="note-text" id="preclearanceNote" style="display:none;">Preclearance means clearing customs before you board — common for Canada, Ireland, and UAE flights</p>
+          <p class="note-text" id="advFlightTypeNote" style="display:none;">Preclearance means clearing customs before you board — common for Canada, Ireland, and UAE flights</p>
         </div>
 
         <!-- Advanced B: Airline -->
@@ -1663,7 +1663,7 @@
             <button type="button" class="pill active" data-buf="0">No</button>
             <button type="button" class="pill" data-buf="5">Yes</button>
           </div>
-          <p class="note-text" id="firstTimeNote" style="display:none;">The new single terminal opened in 2023 — easy to navigate but give yourself a moment to get oriented</p>
+          <p class="note-text" id="advFirstTimeNote" style="display:none;">The new single terminal opened in 2023 — easy to navigate but give yourself a moment to get oriented</p>
         </div>
 
         <!-- Advanced F: Risk Tolerance -->
@@ -1675,13 +1675,13 @@
             <button type="button" class="pill" data-buf="20">Last flight of the day</button>
             <button type="button" class="pill" data-buf="40">Cannot miss this one</button>
           </div>
-          <p class="note-text" id="riskNote" style="display:none;font-style:italic;">Wedding, once-in-a-lifetime connection, or someone will never forgive you</p>
+          <p class="note-text" id="advRiskNote" style="display:none;font-style:italic;">Wedding, once-in-a-lifetime connection, or someone will never forgive you</p>
         </div>
 
         <!-- Advanced G: Travel Day -->
         <div class="card">
           <label class="form-label">Travel day</label>
-          <p class="input-help-text">Certain days add significant time — Chiefs game days back up I-29 for miles, and holiday weekends can double your security wait. Pick the option that matches your travel day for a more accurate result.</p>
+          <p class="input-help-text" id="advTravelDayNote">Certain days add significant time — Chiefs game days back up I-29 for miles, and holiday weekends can double your security wait. Pick the option that matches your travel day for a more accurate result.</p>
           <select id="travelDay">
             <option value="normal">Normal day</option>
             <option value="holiday">Holiday peak (Thanksgiving, Christmas, NYE)</option>
@@ -1707,7 +1707,7 @@
 
     <!-- Result Card -->
     <div id="resultCard" class="result-card hidden">
-      <p class="result-label">LEAVE BY</p>
+      <p class="result-label" id="resultLabel">LEAVE BY</p>
       <div class="leave-time-display">
         <span id="leaveTimeNumber"></span>
         <span id="leaveTimePeriod" class="period"></span>
@@ -1757,11 +1757,11 @@
           <input type="email" id="recipientEmail" placeholder="Their email (or yours)">
           <div style="margin-top:10px;display:flex;align-items:center;gap:8px;justify-content:center;">
             <input type="checkbox" id="sendMeCopy" style="width:auto;min-height:auto;">
-            <label for="sendMeCopy" style="font-size:0.85rem;color:var(--muted);cursor:pointer;">Send me a copy too</label>
+            <label id="sendMeCopyLabel" for="sendMeCopy" style="font-size:0.85rem;color:var(--muted);cursor:pointer;">Send me a copy too</label>
           </div>
           <input type="email" id="senderEmail" placeholder="Your email" style="display:none;margin-top:10px;">
           <button type="button" id="sendEmailBtn" style="display:block;width:100%;background:var(--gold);color:#0a1628;border-radius:14px;padding:16px;font-weight:700;font-size:1rem;margin-top:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">Send It ✈️</button>
-          <p style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;">By submitting your email you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Privacy Policy</a>. We never sell your data.</p>
+          <p id="emailDisclosure" style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;">By submitting your email you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Privacy Policy</a>. We never sell your data.</p>
         </div>
         <p id="emailSuccess" style="display:none;color:var(--success);font-weight:500;font-size:1rem;margin-top:16px;">✈️ Sent! The calculator has spoken.</p>
       </div>
@@ -1843,7 +1843,7 @@
 
   <!-- Cookie Notice -->
   <div id="cookieNotice" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0d2044;padding:14px 20px;align-items:center;justify-content:space-between;gap:16px;">
-    <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--white);margin:0;">This site uses cookies for analytics. By using Make My Flight KC you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>.</p>
+    <p id="cookieNoticeText" style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--white);margin:0;">This site uses cookies for analytics. By using Make My Flight KC you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>.</p>
     <button id="cookieAccept" style="background:var(--gold);color:#0a1628;border:none;border-radius:8px;padding:8px 18px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;">Got it</button>
   </div>
 
@@ -1880,15 +1880,40 @@
         twitterMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #FlyMCI #KansasCity",
         fbMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it \u2014 specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity",
         feedbackBtn: "\uD83D\uDCAC Feedback",
-        advancedToggle: "+ More factors"
+        advancedToggle: "+ More factors",
+        securityNote: "TSA PreCheck lanes at MCI open daily 2\u201310 PM on Concourses B & C",
+        bagsNote: "",
+        transportNote: "The blue bus runs every 20 minutes 24/7. Budget for a potential wait.",
+        advFlightTypeNote: "Preclearance means clearing customs before you board \u2014 common for Canada, Ireland, and UAE flights",
+        advRiskNote: "Wedding, once-in-a-lifetime connection, or someone will never forgive you",
+        advTravelDayNote: "Certain days add significant time \u2014 Chiefs game days back up I-29 for miles, and holiday weekends can double your security wait. Pick the option that matches your travel day for a more accurate result.",
+        advFirstTimeNote: "The new single terminal opened in 2023 \u2014 easy to navigate but give yourself a moment to get oriented",
+        calculateBtn: "Calculate My Leave Time \u2708\uFE0F",
+        resultLabel: "LEAVE BY",
+        flightSubtext: "For your {TIME} departure from MCI",
+        sharePrompt: "Tag whoever needs to see this.",
+        copyClipboard: "Copy to clipboard",
+        copiedClipboard: "Copied \u2713",
+        recalculate: "\u2191 Adjust my inputs",
+        feedbackModalTitle: "Get in touch",
+        feedbackFine: "We read everything. Usually reply within 24 hours.",
+        feedbackSubmit: "Send it",
+        cookieNotice: "This site uses cookies for analytics. By using Make My Flight KC you agree to our Privacy Policy.",
+        cookieAccept: "Got it",
+        advancedClose: "\u2014 Fewer factors",
+        emailPlaceholder: "Their email (or yours)",
+        emailSendBtn: "Send It \u2708\uFE0F",
+        emailSuccess: "\u2708\uFE0F Sent! The calculator has spoken.",
+        emailCopyLabel: "Send me a copy too",
+        emailDisclosure: "By submitting your email you agree to our Privacy Policy. We never sell your data."
       },
       ny: {
         heroHeadline: "You're going to be late. Let's not.",
         heroSubhead: "One of you wants to leave at 5 AM. The other one is wrong.",
-        heroIntro: "MCI is one of the easiest airports in the country. There is no excuse to miss your flight. Here's exactly when to leave.",
+        heroIntro: "MCI is one of the easiest airports in the country. There is genuinely no reason to miss your flight. Here's exactly when to leave. You're welcome.",
         card1: "Where are you coming from?",
         card2: "Your flight",
-        card3: "Security lane \u2014 and no, they're not all the same.",
+        card3: "Security lane \u2014 they're not all the same.",
         card4: "Checking bags?",
         card5: "Getting there",
         neighborhoodPlaceholder: "Type your neighborhood. Don't overthink it.",
@@ -1899,9 +1924,9 @@
         toneTomorrow: "Set an alarm. You're done here.",
         toneFuture: "Come back the day of. This will still be here.",
         shareHeading: "Send this to whoever is wrong.",
-        shareSubhead: "Send this to whoever is wrong about what time to leave.",
+        shareSubhead: "You know who they are.",
         emailHeading: "Settle it.",
-        emailSubhead: "One of you is right. Send them this and find out which one.",
+        emailSubhead: "One of you is right about what time to leave. Send them this and find out which one.",
         kofiTop: "Free. Always will be.",
         kofiSub: "If it saved your trip \u2014 you know what to do.",
         kofiAlwaysTop: "Still here?",
@@ -1910,7 +1935,32 @@
         twitterMsg: "The two-hour airport rule is a myth. Here's what you actually need for MCI. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #MCI",
         fbMsg: "The two-hour airport rule is for people who haven't done the math. I did the math. makemyflightkc.com #MakeMyFlightKC #FlyMCI",
         feedbackBtn: "Talk to me",
-        advancedToggle: "+ More variables"
+        advancedToggle: "+ More variables",
+        securityNote: "PreCheck lanes at MCI: 2\u201310 PM. Plan accordingly.",
+        bagsNote: "",
+        transportNote: "Economy shuttle runs every 20 minutes. You've been warned.",
+        advFlightTypeNote: "Preclearance means customs before you board. Canada, Ireland, UAE. Yes, really.",
+        advRiskNote: "Be honest.",
+        advTravelDayNote: "Chiefs game days back up I-29 for miles. Holiday weekends double your security wait. Pick the right one.",
+        advFirstTimeNote: "The new terminal opened in 2023. It's not complicated. But sure, add the buffer.",
+        calculateBtn: "Calculate My Leave Time \u2708\uFE0F",
+        resultLabel: "LEAVE BY",
+        flightSubtext: "For your {TIME} departure from MCI. Don't be late.",
+        sharePrompt: "Tag whoever needs to see this.",
+        copyClipboard: "Copy",
+        copiedClipboard: "Copied \u2713",
+        recalculate: "\u2191 Change my inputs",
+        feedbackModalTitle: "What.",
+        feedbackFine: "We read everything. Usually reply within 24 hours.",
+        feedbackSubmit: "Send it",
+        cookieNotice: "This site uses cookies for analytics. You're on the internet. This is how it works.",
+        cookieAccept: "Fine.",
+        advancedClose: "\u2014 Fewer variables",
+        emailPlaceholder: "Their email. Or yours. Whoever needs to see this.",
+        emailSendBtn: "Send It \u2708\uFE0F",
+        emailSuccess: "Sent. The calculator has spoken.",
+        emailCopyLabel: "Send me a copy too",
+        emailDisclosure: "Privacy Policy applies. We don't sell data. Obviously."
       }
     };
 
@@ -1966,6 +2016,51 @@
       // Facebook modal copy
       var fbCopyText = document.getElementById('fbCopyText');
       if (fbCopyText) fbCopyText.textContent = c.fbMsg;
+      // Notes
+      var secNote = document.getElementById('securityNote');
+      if (secNote && c.securityNote) secNote.textContent = c.securityNote;
+      var transNote = document.getElementById('transportNote');
+      if (transNote && c.transportNote) transNote.textContent = c.transportNote;
+      var flightTypeNote = document.getElementById('advFlightTypeNote');
+      if (flightTypeNote && c.advFlightTypeNote) flightTypeNote.textContent = c.advFlightTypeNote;
+      var riskNote = document.getElementById('advRiskNote');
+      if (riskNote && c.advRiskNote) riskNote.textContent = c.advRiskNote;
+      var travelDayNote = document.getElementById('advTravelDayNote');
+      if (travelDayNote && c.advTravelDayNote) travelDayNote.textContent = c.advTravelDayNote;
+      var firstTimeNote = document.getElementById('advFirstTimeNote');
+      if (firstTimeNote && c.advFirstTimeNote) firstTimeNote.textContent = c.advFirstTimeNote;
+      // Result label
+      var resultLabel = document.getElementById('resultLabel');
+      if (resultLabel && c.resultLabel) resultLabel.textContent = c.resultLabel;
+      // Copy/clipboard button
+      var copyBtn = document.getElementById('copyBtn');
+      if (copyBtn && c.copyClipboard) copyBtn.textContent = c.copyClipboard;
+      // Recalculate button
+      var recalcBtn = document.getElementById('recalculateBtn');
+      if (recalcBtn && c.recalculate) recalcBtn.textContent = c.recalculate;
+      // Feedback modal
+      var feedbackTitle = document.querySelector('.feedback-modal-title');
+      if (feedbackTitle && c.feedbackModalTitle) feedbackTitle.textContent = c.feedbackModalTitle;
+      var feedbackFine = document.querySelector('.feedback-fine');
+      if (feedbackFine && c.feedbackFine) feedbackFine.textContent = c.feedbackFine;
+      var feedbackSubmit = document.querySelector('.feedback-submit');
+      if (feedbackSubmit && c.feedbackSubmit) feedbackSubmit.textContent = c.feedbackSubmit;
+      // Cookie notice
+      var cookieNoticeText = document.getElementById('cookieNoticeText');
+      if (cookieNoticeText && c.cookieNotice) cookieNoticeText.textContent = c.cookieNotice;
+      var cookieAcceptBtn = document.getElementById('cookieAccept');
+      if (cookieAcceptBtn && c.cookieAccept) cookieAcceptBtn.textContent = c.cookieAccept;
+      // Email capture
+      var recipientEmail = document.getElementById('recipientEmail');
+      if (recipientEmail && c.emailPlaceholder) recipientEmail.placeholder = c.emailPlaceholder;
+      var sendEmailBtn = document.getElementById('sendEmailBtn');
+      if (sendEmailBtn && c.emailSendBtn) sendEmailBtn.textContent = c.emailSendBtn;
+      var emailSuccessEl = document.getElementById('emailSuccess');
+      if (emailSuccessEl && c.emailSuccess) emailSuccessEl.textContent = c.emailSuccess;
+      var sendMeCopyLabel = document.getElementById('sendMeCopyLabel');
+      if (sendMeCopyLabel && c.emailCopyLabel) sendMeCopyLabel.textContent = c.emailCopyLabel;
+      var emailDisclosure = document.getElementById('emailDisclosure');
+      if (emailDisclosure && c.emailDisclosure) emailDisclosure.textContent = c.emailDisclosure;
       // Toggle button states
       document.querySelectorAll('.voice-btn').forEach(function (btn) { btn.classList.remove('active'); });
       var activeBtn = document.getElementById('voice' + voice);
@@ -2328,7 +2423,7 @@
        TRANSPORT MODE — ECONOMY LOT NOTE
        ============================================ */
     document.getElementById('transportMode').addEventListener('change', function () {
-      document.getElementById('economyNote').style.display = this.value === '22' ? 'block' : 'none';
+      document.getElementById('transportNote').style.display = this.value === '22' ? 'block' : 'none';
     });
 
     /* ============================================
@@ -2368,7 +2463,7 @@
         if (!pill) return;
         ftControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
         pill.classList.add('active');
-        document.getElementById('preclearanceNote').style.display = parseInt(pill.getAttribute('data-buf')) === 50 ? 'block' : 'none';
+        document.getElementById('advFlightTypeNote').style.display = parseInt(pill.getAttribute('data-buf')) === 50 ? 'block' : 'none';
       });
 
       // Party size
@@ -2394,7 +2489,7 @@
         if (!pill) return;
         ftcControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
         pill.classList.add('active');
-        document.getElementById('firstTimeNote').style.display = parseInt(pill.getAttribute('data-buf')) === 5 ? 'block' : 'none';
+        document.getElementById('advFirstTimeNote').style.display = parseInt(pill.getAttribute('data-buf')) === 5 ? 'block' : 'none';
       });
 
       // Risk tolerance — show note for "Cannot miss"
@@ -2404,7 +2499,7 @@
         if (!pill) return;
         riskControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
         pill.classList.add('active');
-        document.getElementById('riskNote').style.display = parseInt(pill.getAttribute('data-buf')) === 40 ? 'block' : 'none';
+        document.getElementById('advRiskNote').style.display = parseInt(pill.getAttribute('data-buf')) === 40 ? 'block' : 'none';
       });
 
       // Travel day — game day banner
