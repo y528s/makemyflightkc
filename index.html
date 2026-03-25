@@ -1197,6 +1197,57 @@
       color: #4a5568;
     }
 
+    /* Voice toggle */
+    .voice-toggle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 100px;
+      padding: 4px;
+      margin: 0 auto;
+      width: fit-content;
+    }
+    .voice-btn {
+      background: transparent;
+      border: none;
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .voice-btn.active {
+      background: var(--gold);
+      color: #0a1628;
+      font-weight: 700;
+    }
+    .voice-btn:hover:not(.active) {
+      color: var(--white);
+    }
+    [data-theme="light"] .voice-toggle {
+      background: rgba(0,0,0,0.04);
+      border-color: #dde3f0;
+    }
+    [data-theme="light"] .voice-btn:hover:not(.active) {
+      color: #0a1628;
+    }
+
+    /* Pre-calculate nudge */
+    .pre-calculate-nudge {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      padding: 8px 0 16px;
+      line-height: 1.5;
+    }
+
     /* Input help text */
     .input-help-text {
       font-size: 0.78rem;
@@ -1454,12 +1505,18 @@
       <p style="font-family:'DM Sans',sans-serif;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted);margin-top:12px;">Kansas City's flight departure calculator</p>
     </header>
 
+    <!-- Voice Toggle -->
+    <div id="voiceToggle" class="voice-toggle">
+      <button class="voice-btn active" id="voicekc" onclick="setVoice('kc')">🌾 KC Nice</button>
+      <button class="voice-btn" id="voiceny" onclick="setVoice('ny')">🗽 New Yorker</button>
+    </div>
+
     <!-- Hero -->
     <section style="text-align:center;padding:0 0 32px;">
-      <h2 style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Every KC traveler has asked this question. Now there's an answer.</h2>
-      <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. This settles it.</p>
+      <h2 id="heroHeadline" style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Every KC traveler has asked this question. Now there's an answer.</h2>
+      <p id="heroSubhead" style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. This settles it.</p>
       <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--muted);margin-top:16px;">Built by a Kansas Citian. Free forever. No ads.</p>
-      <p class="hero-intro">I've flown out of this city more times than I can count — and nothing triggers more anxiety than "wait, what time do I need to leave?" Our new terminal at MCI is genuinely beautiful. Let's not ruin the vibe by showing up late — or three hours early because some airline website said so.</p>
+      <p id="heroIntro" class="hero-intro">I've flown out of this city more times than I can count — and nothing triggers more anxiety than "wait, what time do I need to leave?" Our new terminal at MCI is genuinely beautiful. Let's not ruin the vibe by showing up late — or three hours early because some airline website said so.</p>
     </section>
 
     <!-- Calculator Form -->
@@ -1469,7 +1526,7 @@
       <div class="card">
         <div class="step-title">
           <span class="step-badge">1</span>
-          <h3>Where are you leaving from?</h3>
+          <h3><span class="card-title-text">Where are you leaving from?</span></h3>
         </div>
         <div class="autocomplete-wrap">
           <input type="text" id="neighborhoodInput" placeholder="Type your neighborhood, city, or zip..." autocomplete="off">
@@ -1497,7 +1554,7 @@
       <div class="card">
         <div class="step-title">
           <span class="step-badge">2</span>
-          <h3>Your flight</h3>
+          <h3><span class="card-title-text">Your flight</span></h3>
         </div>
         <input type="datetime-local" id="flightDateTime">
       </div>
@@ -1506,7 +1563,7 @@
       <div class="card">
         <div class="step-title">
           <span class="step-badge">3</span>
-          <h3>Security lane</h3>
+          <h3><span class="card-title-text">Security lane</span></h3>
         </div>
         <div class="seg-control" id="securityControl">
           <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
@@ -1520,7 +1577,7 @@
       <div class="card">
         <div class="step-title">
           <span class="step-badge">4</span>
-          <h3>Checking bags?</h3>
+          <h3><span class="card-title-text">Checking bags?</span></h3>
         </div>
         <div class="pill-group" id="bagControl">
           <button type="button" class="pill active" data-buf="0">No</button>
@@ -1532,7 +1589,7 @@
       <div class="card">
         <div class="step-title">
           <span class="step-badge">5</span>
-          <h3>How are you getting there?</h3>
+          <h3><span class="card-title-text">How are you getting there?</span></h3>
         </div>
         <select id="transportMode">
           <option value="5">Driving — Garage (attached, walkable)</option>
@@ -1635,6 +1692,8 @@
 
       </div>
 
+      <p id="preCalculateNudge" class="pre-calculate-nudge">Most KC travelers are either way too early or cutting it close. Let's find your number.</p>
+
       <!-- Calculate Button -->
       <button class="btn-primary" id="calculateBtn" type="button" style="margin-top:16px;">Calculate My Leave Time ✈️</button>
 
@@ -1660,8 +1719,8 @@
     <!-- Ko-fi Section -->
     <div id="kofiSection" style="display:none;">
       <div class="card kofi-card">
-        <p class="kofi-top">Free. No ads. No upsell. Built to settle the argument once and for all.</p>
-        <p class="kofi-sub">If it helped — a coffee keeps it running.</p>
+        <p id="kofiTop" class="kofi-top">Free. No ads. No upsell. Built to settle the argument once and for all.</p>
+        <p id="kofiSub" class="kofi-sub">If it helped — a coffee keeps it running.</p>
         <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
         <p class="kofi-fine">100% goes to keeping this free.</p>
       </div>
@@ -1670,8 +1729,8 @@
     <!-- Post-result sections -->
     <div id="shareSection" style="display:none;">
       <div class="card">
-        <h2 style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
-        <p class="card-subhead">This took 7 seconds. Help a Kansas Citian make their flight.</p>
+        <h2 id="shareHeading" style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
+        <p id="shareSubhead" class="card-subhead">Took 7 seconds. Tag the person you always argue with about leaving time.</p>
         <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send via WhatsApp</button>
         <div class="share-grid-2">
           <button id="facebookBtn" class="share-btn share-btn-facebook" onclick="shareFacebook()">Facebook</button>
@@ -1686,8 +1745,8 @@
     </div>
     <div id="emailCapture" style="display:none;">
       <div class="card" style="padding:32px;text-align:center;">
-        <h2 style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--white);">Settle the argument.</h2>
-        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1rem;color:var(--cream);line-height:1.7;max-width:480px;margin:0 auto 24px;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. Send them this — let the calculator decide.</p>
+        <h2 id="emailHeading" style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--white);">Settle the argument.</h2>
+        <p id="emailSubhead" style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1rem;color:var(--cream);line-height:1.7;max-width:480px;margin:0 auto 24px;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. Send them this — let the calculator decide.</p>
         <div id="emailFormWrap">
           <input type="email" id="recipientEmail" placeholder="Their email (or yours)">
           <div style="margin-top:10px;display:flex;align-items:center;gap:8px;justify-content:center;">
@@ -1705,8 +1764,8 @@
     <!-- Always-visible Ko-fi -->
     <div style="margin-top:48px;">
       <div class="card kofi-card">
-        <p class="kofi-top">Find this useful?</p>
-        <p class="kofi-sub">It's free, ad-free, and built by a KC local. If it saves you a stress spiral — coffee keeps it running.</p>
+        <p id="kofiAlwaysTop" class="kofi-top">Find this useful?</p>
+        <p id="kofiAlwaysSub" class="kofi-sub">It's free, ad-free, and built by a KC local. If it saves you a stress spiral — coffee keeps it running.</p>
         <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
         <p class="kofi-fine">100% goes to keeping this free.</p>
       </div>
@@ -1783,6 +1842,137 @@
   </div>
 
   <script>
+    /* ============================================
+       VOICE MODE COPY STRINGS
+       ============================================ */
+    var COPY = {
+      kc: {
+        heroHeadline: "Every KC traveler has asked this question. Now there's an answer.",
+        heroSubhead: "One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. This settles it.",
+        heroIntro: "I've flown out of this city more times than I can count \u2014 and nothing triggers more anxiety than \"wait, what time do I need to leave?\" Our new terminal at MCI is genuinely beautiful. Let's not ruin the vibe by showing up late \u2014 or three hours early because some airline website said so.",
+        card1: "Where are you leaving from?",
+        card2: "Your flight",
+        card3: "Security lane",
+        card4: "Checking bags? (adds 20 min, just so you know)",
+        card5: "How are you getting to MCI?",
+        neighborhoodPlaceholder: "Overland Park? Northland? Waldo? Start typing...",
+        preCalculate: "Most KC travelers are either way too early or cutting it close. Let\u2019s find your number.",
+        toneGreenToday: "MCI's new terminal was built for this. You've got time. Now go.",
+        toneAmberToday: "You can make this. Stop reading this and start moving.",
+        toneRedToday: "Go. Right now. You can stress about parking on the way home.",
+        toneTomorrow: "You're all set for tomorrow. Screenshot this or add it to your calendar so you don't forget.",
+        toneFuture: "Good planning. Come back day-of and recalculate. MCI will be ready for you.",
+        shareHeading: "Share your leave time",
+        shareSubhead: "Took 7 seconds. Tag the person you always argue with about leaving time.",
+        emailHeading: "Settle the argument.",
+        emailSubhead: "One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. Send them this \u2014 let the calculator decide.",
+        kofiTop: "Free. No ads. No upsell. Built to settle the argument once and for all.",
+        kofiSub: "If it helped \u2014 a coffee keeps it running.",
+        kofiAlwaysTop: "Find this useful?",
+        kofiAlwaysSub: "It's free, ad-free, and built by a KC local. If it saves you a stress spiral \u2014 coffee keeps it running.",
+        whatsappMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. I just calculated my MCI leave time \u2014 you should too. One of us is very wrong. makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result",
+        twitterMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #FlyMCI #KansasCity",
+        fbMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it \u2014 specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity",
+        feedbackBtn: "\uD83D\uDCAC Feedback",
+        advancedToggle: "+ More factors"
+      },
+      ny: {
+        heroHeadline: "You're going to be late. Let's not.",
+        heroSubhead: "One of you wants to leave at 5 AM. The other one is wrong.",
+        heroIntro: "MCI is one of the easiest airports in the country. There is no excuse to miss your flight. Here's exactly when to leave.",
+        card1: "Where are you coming from?",
+        card2: "Your flight",
+        card3: "Security lane \u2014 and no, they're not all the same.",
+        card4: "Checking bags?",
+        card5: "Getting there",
+        neighborhoodPlaceholder: "Type your neighborhood. Don't overthink it.",
+        preCalculate: "The two-hour rule is a myth. Here's your actual number.",
+        toneGreenToday: "You're fine. Go.",
+        toneAmberToday: "Move. The coffee was a bad idea.",
+        toneRedToday: "Why are you still reading this?",
+        toneTomorrow: "Set an alarm. You're done here.",
+        toneFuture: "Come back the day of. This will still be here.",
+        shareHeading: "Send this to whoever is wrong.",
+        shareSubhead: "Send this to whoever is wrong about what time to leave.",
+        emailHeading: "Settle it.",
+        emailSubhead: "One of you is right. Send them this and find out which one.",
+        kofiTop: "Free. Always will be.",
+        kofiSub: "If it saved your trip \u2014 you know what to do.",
+        kofiAlwaysTop: "Still here?",
+        kofiAlwaysSub: "It's free. If it helped, a coffee is the least you can do.",
+        whatsappMsg: "I just used a calculator to figure out when to leave for MCI. You should too \u2014 one of us is definitely wrong about this. makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result",
+        twitterMsg: "The two-hour airport rule is a myth. Here's what you actually need for MCI. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #MCI",
+        fbMsg: "The two-hour airport rule is for people who haven't done the math. I did the math. makemyflightkc.com #MakeMyFlightKC #FlyMCI",
+        feedbackBtn: "Talk to me",
+        advancedToggle: "+ More variables"
+      }
+    };
+
+    var currentVoice = localStorage.getItem('mmfkc-voice') || 'kc';
+
+    function applyCopy(voice) {
+      var c = COPY[voice];
+      // Hero
+      var heroHeadline = document.getElementById('heroHeadline');
+      var heroSubhead = document.getElementById('heroSubhead');
+      var heroIntro = document.getElementById('heroIntro');
+      if (heroHeadline) heroHeadline.textContent = c.heroHeadline;
+      if (heroSubhead) heroSubhead.textContent = c.heroSubhead;
+      if (heroIntro) heroIntro.textContent = c.heroIntro;
+      // Card titles
+      var cardTitles = document.querySelectorAll('.card-title-text');
+      var titles = [c.card1, c.card2, c.card3, c.card4, c.card5];
+      cardTitles.forEach(function (el, i) {
+        if (titles[i]) el.textContent = titles[i];
+      });
+      // Neighborhood placeholder
+      var neighborhoodInput = document.getElementById('neighborhoodInput');
+      if (neighborhoodInput) neighborhoodInput.placeholder = c.neighborhoodPlaceholder;
+      // Pre-calculate nudge
+      var preCalc = document.getElementById('preCalculateNudge');
+      if (preCalc) preCalc.textContent = c.preCalculate;
+      // Share section
+      var shareHeading = document.getElementById('shareHeading');
+      var shareSubhead = document.getElementById('shareSubhead');
+      if (shareHeading) shareHeading.textContent = c.shareHeading;
+      if (shareSubhead) shareSubhead.textContent = c.shareSubhead;
+      // Email capture
+      var emailHeading = document.getElementById('emailHeading');
+      var emailSubhead = document.getElementById('emailSubhead');
+      if (emailHeading) emailHeading.textContent = c.emailHeading;
+      if (emailSubhead) emailSubhead.textContent = c.emailSubhead;
+      // Ko-fi post-result
+      var kofiTop = document.getElementById('kofiTop');
+      var kofiSub = document.getElementById('kofiSub');
+      if (kofiTop) kofiTop.textContent = c.kofiTop;
+      if (kofiSub) kofiSub.textContent = c.kofiSub;
+      // Ko-fi always visible
+      var kofiAlwaysTop = document.getElementById('kofiAlwaysTop');
+      var kofiAlwaysSub = document.getElementById('kofiAlwaysSub');
+      if (kofiAlwaysTop) kofiAlwaysTop.textContent = c.kofiAlwaysTop;
+      if (kofiAlwaysSub) kofiAlwaysSub.textContent = c.kofiAlwaysSub;
+      // Feedback button
+      var feedbackBtn = document.getElementById('feedbackFloatBtn');
+      if (feedbackBtn) feedbackBtn.textContent = c.feedbackBtn;
+      // Advanced toggle
+      var advToggle = document.getElementById('advancedToggle');
+      if (advToggle && !advToggle.classList.contains('open')) advToggle.textContent = c.advancedToggle;
+      // Facebook modal copy
+      var fbCopyText = document.getElementById('fbCopyText');
+      if (fbCopyText) fbCopyText.textContent = c.fbMsg;
+      // Toggle button states
+      document.querySelectorAll('.voice-btn').forEach(function (btn) { btn.classList.remove('active'); });
+      var activeBtn = document.getElementById('voice' + voice);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function setVoice(voice) {
+      currentVoice = voice;
+      localStorage.setItem('mmfkc-voice', voice);
+      applyCopy(voice);
+      if (typeof gtag === 'function') gtag('event', 'voice_mode_changed', { voice_mode: voice });
+    }
+
     /* ============================================
        STARS GENERATION
        ============================================ */
@@ -2377,15 +2567,15 @@
 
       if (isToday) {
         if (statusClass === 'status-green')
-          toneText = "MCI's new terminal was built for this. You've got time. Now go.";
+          toneText = COPY[currentVoice].toneGreenToday;
         else if (statusClass === 'status-amber')
-          toneText = 'You can make this. Stop reading this and start moving.';
+          toneText = COPY[currentVoice].toneAmberToday;
         else
-          toneText = 'Go. Right now. You can stress about parking on the way home.';
+          toneText = COPY[currentVoice].toneRedToday;
       } else if (isTomorrow) {
-        toneText = "You're all set for tomorrow. Screenshot this or add it to your calendar so you don't forget.";
+        toneText = COPY[currentVoice].toneTomorrow;
       } else {
-        toneText = 'Good planning. Come back day-of and recalculate with live traffic conditions in mind. MCI will be ready for you.';
+        toneText = COPY[currentVoice].toneFuture;
       }
 
       currentBreakdown = {
@@ -2556,9 +2746,7 @@
        WHATSAPP
        ============================================ */
     function shareWhatsApp() {
-      var msg = encodeURIComponent(
-        'There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. I just calculated my MCI leave time — you should too. One of us is very wrong. makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
-      );
+      var msg = encodeURIComponent(COPY[currentVoice].whatsappMsg);
       window.open('https://wa.me/?text=' + msg, '_blank');
       if (typeof gtag === 'function') gtag('event', 'whatsapp_shared');
     }
@@ -2601,12 +2789,7 @@
        TWITTER / X
        ============================================ */
     function shareTwitter() {
-      var text = encodeURIComponent(
-        'I need to leave by ' + currentLeaveTime +
-        ' for my ' + currentFlightTime + ' MCI flight. Calculated with Make My Flight KC. ' +
-        'What\'s yours? https://makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result ' +
-        '#MakeMyFlightKC #MCI'
-      );
+      var text = encodeURIComponent(COPY[currentVoice].twitterMsg);
       window.open('https://twitter.com/intent/tweet?text=' + text, '_blank');
       if (typeof gtag === 'function') gtag('event', 'twitter_shared');
     }
@@ -2816,6 +2999,11 @@
         observer.observe(calcBtn);
       }
     })();
+
+    /* ============================================
+       APPLY VOICE ON LOAD
+       ============================================ */
+    applyCopy(currentVoice);
 
   </script>
 
