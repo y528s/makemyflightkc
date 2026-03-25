@@ -378,6 +378,43 @@
       flex-wrap: wrap;
     }
 
+    .airport-style-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .airport-style-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 100px;
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      width: auto;
+      height: auto;
+    }
+
+    .airport-style-pill:hover {
+      border-color: var(--gold);
+    }
+
+    .airport-style-pill.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0a1628;
+      font-weight: 700;
+    }
+
     .pill {
       font-family: 'DM Sans', sans-serif;
       font-size: clamp(0.85rem, 2.5vw, 0.95rem);
@@ -1763,24 +1800,25 @@
         <p class="note-text" id="securityNote">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
 
-      <!-- Step 3.5: How do you fly? -->
+      <!-- Step 4: How do you fly? -->
       <div class="card">
         <div class="step-title">
+          <span class="step-badge">4</span>
           <h3><span class="card-title-text">How do you fly?</span></h3>
         </div>
-        <div class="pill-group" id="airportStyleControl">
-          <button type="button" class="pill active" data-buf="0" id="airportStyle1"><span id="airportStyle1Label">Straight to gate</span></button>
-          <button type="button" class="pill" data-buf="25" id="airportStyle2"><span id="airportStyle2Label">Browse &amp; grab a bite</span></button>
-          <button type="button" class="pill" data-buf="40" id="airportStyle3"><span id="airportStyle3Label">Quick lounge stop</span></button>
-          <button type="button" class="pill" data-buf="70" id="airportStyle4"><span id="airportStyle4Label">Full lounge experience</span></button>
+        <div class="airport-style-pills" id="airportStyleControl">
+          <button type="button" class="airport-style-pill active" data-buf="0" id="airportStyle1"><span id="airportStyle1Label">Straight to gate</span></button>
+          <button type="button" class="airport-style-pill" data-buf="25" id="airportStyle2"><span id="airportStyle2Label">Browse &amp; grab a bite</span></button>
+          <button type="button" class="airport-style-pill" data-buf="40" id="airportStyle3"><span id="airportStyle3Label">Quick lounge stop</span></button>
+          <button type="button" class="airport-style-pill" data-buf="70" id="airportStyle4"><span id="airportStyle4Label">Full lounge experience</span></button>
         </div>
         <p class="note-text" id="airportStyleNote">You know where you're going. No detours.</p>
       </div>
 
-      <!-- Step 4: Checking bags? -->
+      <!-- Step 5: Checking bags? -->
       <div class="card">
         <div class="step-title">
-          <span class="step-badge">4</span>
+          <span class="step-badge">5</span>
           <h3><span class="card-title-text">Checking bags?</span></h3>
         </div>
         <div class="pill-group" id="bagControl">
@@ -1789,11 +1827,11 @@
         </div>
       </div>
 
-      <!-- Step 5: How are you getting there? -->
+      <!-- Step 6: How are you getting there? -->
       <div class="card">
         <div class="step-title">
-          <span class="step-badge">5</span>
-          <h3><span class="card-title-text">How are you getting there?</span></h3>
+          <span class="step-badge">6</span>
+          <h3><span class="card-title-text">How are you getting to MCI?</span></h3>
         </div>
         <select id="transportMode">
           <option value="5">Driving — Garage (attached, walkable)</option>
@@ -2061,8 +2099,9 @@
         card1: "Where are you leaving from?",
         card2: "Your flight",
         card3: "Security lane",
-        card4: "Checking bags? (adds 20 min, just so you know)",
-        card5: "How are you getting to MCI?",
+        card4: "How do you fly?",
+        card5: "Checking bags? (adds 20 min, just so you know)",
+        card6: "How are you getting to MCI?",
         neighborhoodPlaceholder: "Overland Park? Northland? Waldo? Start typing...",
         preCalculate: "Most KC travelers are either way too early or cutting it close. Let\u2019s find your number.",
         toneGreenToday: "MCI's new terminal was built for this. You've got time. Now go.",
@@ -2124,8 +2163,9 @@
         card1: "Where are you coming from?",
         card2: "Your flight",
         card3: "Security lane \u2014 they're not all the same.",
-        card4: "Checking bags?",
-        card5: "Getting there",
+        card4: "How do you fly?",
+        card5: "Checking bags?",
+        card6: "Getting there",
         neighborhoodPlaceholder: "Type your neighborhood. Don't overthink it.",
         preCalculate: "The two-hour rule is a myth. Here's your actual number.",
         toneGreenToday: "You're fine. Go.",
@@ -2195,7 +2235,7 @@
       if (heroIntro) heroIntro.textContent = c.heroIntro;
       // Card titles
       var cardTitles = document.querySelectorAll('.card-title-text');
-      var titles = [c.card1, c.card2, c.card3, c.card4, c.card5];
+      var titles = [c.card1, c.card2, c.card3, c.card4, c.card5, c.card6];
       cardTitles.forEach(function (el, i) {
         if (titles[i]) el.textContent = titles[i];
       });
@@ -2246,7 +2286,7 @@
       // Airport style note — update based on currently active pill
       var asNote = document.getElementById('airportStyleNote');
       if (asNote) {
-        var activeAsPill = document.querySelector('#airportStyleControl .pill.active');
+        var activeAsPill = document.querySelector('#airportStyleControl .airport-style-pill.active');
         var asBuf = activeAsPill ? parseInt(activeAsPill.getAttribute('data-buf')) : 0;
         if (asBuf === 0) asNote.textContent = c.airportNote1;
         else if (asBuf === 25) asNote.textContent = c.airportNote2;
@@ -2665,9 +2705,9 @@
        AIRPORT STYLE PILLS
        ============================================ */
     document.getElementById('airportStyleControl').addEventListener('click', function (e) {
-      var pill = e.target.closest('.pill');
+      var pill = e.target.closest('.airport-style-pill');
       if (!pill) return;
-      document.querySelectorAll('#airportStyleControl .pill').forEach(function (p) { p.classList.remove('active'); });
+      document.querySelectorAll('#airportStyleControl .airport-style-pill').forEach(function (p) { p.classList.remove('active'); });
       pill.classList.add('active');
       var buf = parseInt(pill.getAttribute('data-buf'));
       var c = COPY[currentVoice];
@@ -2854,7 +2894,7 @@
       const boardingBuffer = 35;
 
       // Airport style buffer
-      var activeAirportStyle = document.querySelector('#airportStyleControl .pill.active');
+      var activeAirportStyle = document.querySelector('#airportStyleControl .airport-style-pill.active');
       var airportStyleBuffer = activeAirportStyle ? parseInt(activeAirportStyle.getAttribute('data-buf')) : 0;
 
       // Advanced mode values (default 0 if never opened)
