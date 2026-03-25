@@ -2637,6 +2637,8 @@
     /* ============================================
        ADVANCED MODE TOGGLE
        ============================================ */
+    var advancedModeUsed = false;
+
     (function initAdvanced() {
       var toggle = document.getElementById('advancedToggle');
       var section = document.getElementById('advancedSection');
@@ -2644,6 +2646,7 @@
 
       toggle.addEventListener('click', function () {
         isOpen = !isOpen;
+        advancedModeUsed = true;
         section.style.display = isOpen ? 'block' : 'none';
         toggle.textContent = isOpen ? '— Fewer factors' : '+ More factors';
         if (isOpen && typeof gtag === 'function') gtag('event', 'advanced_mode_opened');
@@ -2783,23 +2786,32 @@
       const boardingBuffer = 35;
 
       // Advanced mode values (default 0 if never opened)
-      var activeFlightType = document.querySelector('#flightTypeControl .pill.active');
-      var intlBuffer = activeFlightType ? parseInt(activeFlightType.getAttribute('data-buf')) : 0;
+      var intlBuffer = 0;
+      var airlineBuffer = 0;
+      var partyBuffer = 0;
+      var mobilityBuffer = 0;
+      var firstTimeBuffer = 0;
+      var riskBuffer = 0;
 
-      var airlineSelect = document.getElementById('airlineSelect');
-      var airlineBuffer = airlineSelect ? parseInt(airlineSelect.value) || 0 : 0;
+      if (advancedModeUsed) {
+        var activeFlightType = document.querySelector('#flightTypeControl .pill.active');
+        intlBuffer = activeFlightType ? parseInt(activeFlightType.getAttribute('data-buf')) : 0;
 
-      var activeParty = document.querySelector('#partySizeControl .pill.active');
-      var partyBuffer = activeParty ? parseInt(activeParty.getAttribute('data-buf')) : 0;
+        var airlineSelect = document.getElementById('airlineSelect');
+        airlineBuffer = airlineSelect ? parseInt(airlineSelect.value) || 0 : 0;
 
-      var activeMobility = document.querySelector('#mobilityControl .pill.active');
-      var mobilityBuffer = activeMobility ? parseInt(activeMobility.getAttribute('data-buf')) : 0;
+        var activeParty = document.querySelector('#partySizeControl .pill.active');
+        partyBuffer = activeParty ? parseInt(activeParty.getAttribute('data-buf')) : 0;
 
-      var activeFirstTime = document.querySelector('#firstTimeControl .pill.active');
-      var firstTimeBuffer = activeFirstTime ? parseInt(activeFirstTime.getAttribute('data-buf')) : 0;
+        var activeMobility = document.querySelector('#mobilityControl .pill.active');
+        mobilityBuffer = activeMobility ? parseInt(activeMobility.getAttribute('data-buf')) : 0;
 
-      var activeRisk = document.querySelector('#riskControl .pill.active');
-      var riskBuffer = activeRisk ? parseInt(activeRisk.getAttribute('data-buf')) : 0;
+        var activeFirstTime = document.querySelector('#firstTimeControl .pill.active');
+        firstTimeBuffer = activeFirstTime ? parseInt(activeFirstTime.getAttribute('data-buf')) : 0;
+
+        var activeRisk = document.querySelector('#riskControl .pill.active');
+        riskBuffer = activeRisk ? parseInt(activeRisk.getAttribute('data-buf')) : 0;
+      }
 
       // Step 2 — Calculate buffers
       var adjustedDrive = Math.round(driveBase * mult) + driveAdder;
@@ -2841,19 +2853,7 @@
       currentFlightTime = flightDisplayHour + ':' + flightDisplayMin + ' ' + flightPeriod;
 
       // Step 4 — Determine status
-      var spare = flightMinutes - (leaveHour * 60 + leaveMin) - totalBuffer;
       var statusText, statusClass, toneText;
-
-      if (spare > 30) {
-        statusText = 'ON TRACK';
-        statusClass = 'status-green';
-      } else if (spare >= 10) {
-        statusText = 'CUTTING IT CLOSE';
-        statusClass = 'status-amber';
-      } else {
-        statusText = 'TIGHT — LEAVE NOW';
-        statusClass = 'status-red';
-      }
 
       // Flight date detection
       var today = new Date();
@@ -2862,6 +2862,25 @@
       var isToday = flightDate.toDateString() === today.toDateString();
       var isTomorrow = flightDate.toDateString() === tomorrow.toDateString();
       var isFuture = !isToday && !isTomorrow;
+
+      if (isToday) {
+        var nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+        var minutesUntilLeave = (leaveHour * 60 + leaveMin) - nowMinutes;
+
+        if (minutesUntilLeave > 30) {
+          statusText = 'ON TRACK';
+          statusClass = 'status-green';
+        } else if (minutesUntilLeave > 0) {
+          statusText = 'CUTTING IT CLOSE';
+          statusClass = 'status-amber';
+        } else {
+          statusText = 'TIGHT — LEAVE NOW';
+          statusClass = 'status-red';
+        }
+      } else {
+        statusText = 'ON TRACK';
+        statusClass = 'status-green';
+      }
 
       if (isToday) {
         if (statusClass === 'status-green')
@@ -2978,10 +2997,10 @@
       ];
 
       if (breakdown.bagBuffer > 0) chips.push({ label: 'Bags', value: breakdown.bagBuffer });
-      if (breakdown.intlBuffer > 0) chips.push({ label: 'International', value: breakdown.intlBuffer });
-      if (breakdown.partyBuffer > 0) chips.push({ label: 'Party', value: breakdown.partyBuffer });
-      if (breakdown.mobilityBuffer > 0) chips.push({ label: 'Mobility', value: breakdown.mobilityBuffer });
-      if (breakdown.riskBuffer !== 0) chips.push({ label: 'Risk', value: breakdown.riskBuffer });
+      if (advancedModeUsed && breakdown.intlBuffer > 0) chips.push({ label: 'International', value: breakdown.intlBuffer });
+      if (advancedModeUsed && breakdown.partyBuffer > 0) chips.push({ label: 'Party', value: breakdown.partyBuffer });
+      if (advancedModeUsed && breakdown.mobilityBuffer > 0) chips.push({ label: 'Mobility', value: breakdown.mobilityBuffer });
+      if (advancedModeUsed && breakdown.riskBuffer !== 0) chips.push({ label: 'Risk', value: breakdown.riskBuffer });
 
       chips.forEach(function (chip, i) {
         var el = document.createElement('div');
