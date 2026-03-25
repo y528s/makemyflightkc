@@ -1121,6 +1121,9 @@
     var selectedDriveTime = null;
     var trafficMultiplier = 1.0;
     var allPlaces = Object.keys(DRIVE_TIMES);
+    var currentLeaveTime = '';
+    var currentFlightTime = '';
+    var currentBreakdown = null;
 
     /* ============================================
        AUTOCOMPLETE
@@ -1449,12 +1452,158 @@
     })();
 
     /* ============================================
-       CALCULATE BUTTON (placeholder — logic in Step 5)
+       TRAVEL DAY DATA
        ============================================ */
-    document.getElementById('calculateBtn').addEventListener('click', function () {
+    var TRAVEL_DAY_DATA = {
+      "normal":         { securityAdder: 0,  driveAdder: 0 },
+      "holiday":        { securityAdder: 25, driveAdder: 12 },
+      "summer":         { securityAdder: 10, driveAdder: 5 },
+      "monday":         { securityAdder: 20, driveAdder: 0 },
+      "chiefs":         { securityAdder: 0,  driveAdder: 20 },
+      "sporting":       { securityAdder: 0,  driveAdder: 10 },
+      "currents":       { securityAdder: 0,  driveAdder: 10 },
+      "royals_day":     { securityAdder: 0,  driveAdder: 10 },
+      "royals_evening": { securityAdder: 0,  driveAdder: 15 }
+    };
+
+    /* ============================================
+       CALCULATE FUNCTION
+       ============================================ */
+    function calculate() {
+      // Step 1 — Collect and validate inputs
+      var driveBase = selectedDriveTime;
+      if (!driveBase) {
+        alert('Please select your neighborhood first');
+        return;
+      }
+
+      var flightDateTimeVal = document.getElementById('flightDateTime').value;
+      if (!flightDateTimeVal) {
+        alert('Please enter your flight departure time');
+        return;
+      }
+
+      var flightDate = new Date(flightDateTimeVal);
+      var flightMinutes = flightDate.getHours() * 60 + flightDate.getMinutes();
+
+      // Traffic multiplier from active pill
+      var activeTrafficPill = document.querySelector('#trafficWrap .pill.active');
+      var mult = activeTrafficPill ? parseFloat(activeTrafficPill.getAttribute('data-mult')) : 1.0;
+
+      // Travel day adders
+      var travelDayVal = document.getElementById('travelDay') ? document.getElementById('travelDay').value : 'normal';
+      var dayData = TRAVEL_DAY_DATA[travelDayVal] || { securityAdder: 0, driveAdder: 0 };
+      var driveAdder = dayData.driveAdder;
+      var securityAdder = dayData.securityAdder;
+
+      // Security base from active segment button
+      var activeSecBtn = document.querySelector('#securityControl .seg-btn.active');
+      var securityBase = activeSecBtn ? parseInt(activeSecBtn.getAttribute('data-wait')) : 10;
+
+      // Bag buffer
+      var activeBagPill = document.querySelector('#bagControl .pill.active');
+      var bagBuffer = activeBagPill ? parseInt(activeBagPill.getAttribute('data-buf')) : 0;
+
+      // Parking buffer
+      var parkingBuffer = parseInt(document.getElementById('transportMode').value);
+
+      // Gate walk (fixed MCI average)
+      var gateWalk = 8;
+
+      // Advanced mode values (default 0 if never opened)
+      var activeFlightType = document.querySelector('#flightTypeControl .pill.active');
+      var intlBuffer = activeFlightType ? parseInt(activeFlightType.getAttribute('data-buf')) : 0;
+
+      var airlineSelect = document.getElementById('airlineSelect');
+      var airlineBuffer = airlineSelect ? parseInt(airlineSelect.value) || 0 : 0;
+
+      var activeParty = document.querySelector('#partySizeControl .pill.active');
+      var partyBuffer = activeParty ? parseInt(activeParty.getAttribute('data-buf')) : 0;
+
+      var activeMobility = document.querySelector('#mobilityControl .pill.active');
+      var mobilityBuffer = activeMobility ? parseInt(activeMobility.getAttribute('data-buf')) : 0;
+
+      var activeFirstTime = document.querySelector('#firstTimeControl .pill.active');
+      var firstTimeBuffer = activeFirstTime ? parseInt(activeFirstTime.getAttribute('data-buf')) : 0;
+
+      var activeRisk = document.querySelector('#riskControl .pill.active');
+      var riskBuffer = activeRisk ? parseInt(activeRisk.getAttribute('data-buf')) : 0;
+
+      // Step 2 — Calculate buffers
+      var adjustedDrive = Math.round(driveBase * mult) + driveAdder;
+      var adjustedSecurity = securityBase + securityAdder;
+
+      var totalAtAirport =
+        adjustedSecurity +
+        bagBuffer +
+        parkingBuffer +
+        gateWalk +
+        intlBuffer +
+        airlineBuffer +
+        partyBuffer +
+        mobilityBuffer +
+        firstTimeBuffer +
+        riskBuffer;
+
+      var totalBuffer = adjustedDrive + totalAtAirport;
+
+      // Step 3 — Calculate leave time
+      var leaveMinutes = flightMinutes - totalBuffer;
+      leaveMinutes = ((leaveMinutes % 1440) + 1440) % 1440;
+
+      var leaveHour = Math.floor(leaveMinutes / 60);
+      var leaveMin = leaveMinutes % 60;
+      var period = leaveHour >= 12 ? 'PM' : 'AM';
+      var displayHour = leaveHour > 12 ? leaveHour - 12 : leaveHour === 0 ? 12 : leaveHour;
+      var displayMin = leaveMin.toString().padStart(2, '0');
+
+      currentLeaveTime = displayHour + ':' + displayMin + ' ' + period;
+
+      var flightHour = flightDate.getHours();
+      var flightPeriod = flightHour >= 12 ? 'PM' : 'AM';
+      var flightDisplayHour = flightHour > 12 ? flightHour - 12 : flightHour === 0 ? 12 : flightHour;
+      var flightDisplayMin = flightDate.getMinutes().toString().padStart(2, '0');
+      currentFlightTime = flightDisplayHour + ':' + flightDisplayMin + ' ' + flightPeriod;
+
+      // Step 4 — Determine status
+      var spare = flightMinutes - (leaveHour * 60 + leaveMin) - totalBuffer;
+      var statusText, statusClass, toneText;
+
+      if (spare > 30) {
+        statusText = 'ON TRACK';
+        statusClass = 'status-green';
+        toneText = "MCI's new terminal was built for this. You've got time.";
+      } else if (spare >= 10) {
+        statusText = 'CUTTING IT CLOSE';
+        statusClass = 'status-amber';
+        toneText = 'Move with purpose. No second coffee.';
+      } else {
+        statusText = 'TIGHT — LEAVE NOW';
+        statusClass = 'status-red';
+        toneText = 'Leave now. The airport will forgive you for speed-walking.';
+      }
+
+      currentBreakdown = {
+        adjustedDrive: adjustedDrive,
+        parkingBuffer: parkingBuffer,
+        adjustedSecurity: adjustedSecurity,
+        gateWalk: gateWalk,
+        bagBuffer: bagBuffer,
+        intlBuffer: intlBuffer,
+        partyBuffer: partyBuffer,
+        mobilityBuffer: mobilityBuffer,
+        riskBuffer: riskBuffer,
+        totalBuffer: totalBuffer
+      };
+
+      // Step 5 — Fire GA4 event
       if (typeof gtag === 'function') gtag('event', 'calculate_clicked');
-      // calculate() will be implemented in Step 5
-    });
+    }
+
+    /* ============================================
+       CALCULATE BUTTON
+       ============================================ */
+    document.getElementById('calculateBtn').addEventListener('click', calculate);
 
     /* ============================================
        DISCLAIMER TOGGLE
