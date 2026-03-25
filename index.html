@@ -1197,6 +1197,19 @@
       color: #4a5568;
     }
 
+    /* Input help text */
+    .input-help-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 10px;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    [data-theme="light"] .input-help-text {
+      color: #4a5568;
+    }
+
     /* Floating feedback button */
     .feedback-float-btn {
       position: fixed;
@@ -1605,6 +1618,7 @@
         <!-- Advanced G: Travel Day -->
         <div class="card">
           <label class="form-label">Travel day</label>
+          <p class="input-help-text">Certain days add significant time — Chiefs game days back up I-29 for miles, and holiday weekends can double your security wait. Pick the option that matches your travel day for a more accurate result.</p>
           <select id="travelDay">
             <option value="normal">Normal day</option>
             <option value="holiday">Holiday peak (Thanksgiving, Christmas, NYE)</option>
