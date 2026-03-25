@@ -1053,6 +1053,11 @@
       <p id="resultTone" class="result-tone"></p>
     </div>
 
+    <!-- Post-result sections (populated in Steps 6 & 7) -->
+    <div id="shareSection" style="display:none;"></div>
+    <div id="emailCapture" style="display:none;"></div>
+    <div id="kofiSection" style="display:none;"></div>
+
     <!-- About / SEO Section -->
     <section style="border-top:1px solid var(--card-bd);margin-top:48px;padding-top:40px;">
       <h2 style="font-size:1.8rem;color:var(--white);">Why Kansas City needed this</h2>
@@ -1736,6 +1741,26 @@
 
       // Step 6 — Render result
       renderResult(currentBreakdown, displayHour, displayMin, period, currentFlightTime, statusText, statusClass, toneText);
+
+      // Step 7 — Show post-result sections
+      var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
+      sectionsToShow.forEach(function (id, i) {
+        setTimeout(function () {
+          var el = document.getElementById(id);
+          if (el) {
+            el.style.display = 'block';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(16px)';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+              });
+            });
+          }
+        }, 400 + (i * 150));
+      });
     }
 
     /* ============================================
