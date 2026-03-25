@@ -97,6 +97,11 @@
     /* ============================================
        BACKGROUND
        ============================================ */
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #1e3a70 0%, #0a1628 55%, #050d1a 100%);
+      background-attachment: fixed;
+    }
+
     [data-theme="dark"] body {
       background: radial-gradient(ellipse at 50% 0%, #1e3a70 0%, #0a1628 55%, #050d1a 100%);
       background-attachment: fixed;
@@ -468,16 +473,6 @@
     }
 
     /* ============================================
-       FOOTER
-       ============================================ */
-    .footer {
-      text-align: center;
-      padding: 32px 0;
-      font-size: clamp(0.75rem, 2vw, 0.8rem);
-      color: var(--text-muted);
-    }
-
-    /* ============================================
        RESPONSIVE
        ============================================ */
     @media (min-width: 600px) {
@@ -642,38 +637,6 @@
       font-size: 0.75rem;
       color: var(--muted);
       margin-top: 8px;
-    }
-
-    /* Flight input toggle tabs */
-    .flight-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .flight-tab {
-      flex: 1;
-      min-height: 48px;
-      border: 1px solid var(--pill-bd);
-      border-radius: var(--radius-pill);
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-      cursor: pointer;
-      transition: var(--transition);
-      padding: 10px 16px;
-    }
-
-    .flight-tab.active {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0a1628;
-      font-weight: 600;
-    }
-
-    .flight-tab:hover:not(.active) {
-      border-color: var(--gold);
     }
 
     /* Calculate button mobile sticky */
@@ -923,6 +886,289 @@
     .copy-link:hover {
       color: var(--gold);
     }
+
+    /* Ko-fi card */
+    .kofi-card {
+      text-align: center;
+      background: rgba(255,95,95,0.06);
+      border: 1px solid rgba(255,95,95,0.2);
+    }
+    .kofi-top {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .kofi-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .kofi-btn {
+      display: block;
+      width: 100%;
+      background: #ff5f5f;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 10px;
+    }
+    .kofi-btn:hover {
+      background: #ff4444;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,95,95,0.4);
+    }
+    .kofi-fine {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #060f1e;
+      border-top: 1px solid rgba(240,180,41,0.2);
+      margin-top: 60px;
+      padding: 0;
+    }
+    [data-theme="light"] .site-footer {
+      background: #0a1628;
+    }
+    .footer-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .footer-plane {
+      font-size: 1.4rem;
+    }
+    .footer-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--gold);
+      letter-spacing: -0.01em;
+    }
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: #4a5a7a;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 28px;
+    }
+    .footer-links-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .footer-links-row a {
+      color: #8d99b2;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .footer-links-row a:hover {
+      color: var(--gold);
+    }
+    .footer-dot {
+      color: #2a3a5a;
+      font-size: 0.82rem;
+    }
+    .footer-disclaimer-toggle {
+      font-size: 0.75rem;
+      color: #4a5a7a;
+      cursor: pointer;
+      margin-top: 20px;
+      margin-bottom: 0;
+      transition: color 0.2s;
+    }
+    .footer-disclaimer-toggle:hover {
+      color: var(--muted);
+    }
+    .footer-disclaimer-text {
+      font-size: 0.75rem;
+      color: #4a5a7a;
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 12px auto 0;
+    }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: #2a3a5a;
+      margin-top: 24px;
+      margin-bottom: 0;
+    }
+
+    /* Tooltips */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip-icon {
+      font-size: 0.7rem;
+      color: var(--muted);
+      cursor: help;
+      margin-left: 4px;
+      vertical-align: super;
+    }
+    .tooltip-box {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--sky-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: var(--cream);
+      max-width: 240px;
+      width: max-content;
+      z-index: 100;
+      line-height: 1.5;
+      text-align: left;
+      pointer-events: none;
+    }
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap.active .tooltip-box {
+      display: block;
+    }
+
+    /* Recalculate link */
+    .recalculate-link {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 8px;
+      text-decoration: underline;
+      margin-bottom: 8px;
+    }
+    .recalculate-link:hover {
+      color: var(--gold);
+    }
+
+    /* Buffer explainer */
+    .buffer-explainer {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    /* Viral nudge */
+    .viral-nudge {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 8px 0 4px;
+    }
+    .viral-nudge-link {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Facebook modal */
+    .fb-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .fb-modal-card {
+      background: var(--sky-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+    }
+    .fb-modal-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .fb-copy-box {
+      background: var(--runway);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.85rem;
+      color: var(--cream);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      user-select: all;
+      cursor: text;
+      white-space: pre-wrap;
+    }
+    .fb-modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .fb-btn-copy {
+      background: var(--gold);
+      color: #0a1628;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fb-btn-copy:hover {
+      background: var(--gold-light);
+    }
+    .fb-btn-open {
+      background: #1877F2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .fb-btn-open:hover {
+      opacity: 0.9;
+    }
+    .fb-modal-dismiss {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      margin: 0;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -947,8 +1193,8 @@
 
     <!-- Hero -->
     <section style="text-align:center;padding:0 0 32px;">
-      <h2 style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Don't miss your flight.</h2>
-      <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">Tell me your flight time. I'll tell you exactly when to leave.</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,2.8rem);color:var(--white);">Every KC traveler has asked this question. Now there's an answer.</h2>
+      <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;">One of you wants to leave at 5 AM. The other thinks 45 minutes is fine. This settles it.</p>
       <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--muted);margin-top:16px;">Built by a Kansas Citian. Free forever. No ads.</p>
     </section>
 
@@ -989,24 +1235,7 @@
           <span class="step-badge">2</span>
           <h3>Your flight</h3>
         </div>
-        <div class="flight-tabs">
-          <button type="button" class="flight-tab active" data-panel="flightTimePanel">Enter departure time</button>
-          <button type="button" class="flight-tab" data-panel="flightLookupPanel">Look up by flight number</button>
-        </div>
-        <div id="flightTimePanel">
-          <input type="datetime-local" id="flightDateTime">
-        </div>
-        <div id="flightLookupPanel" style="display:none;">
-          <input type="text" id="flightNumberInput" placeholder="e.g. WN 1234" autocomplete="off">
-          <div style="margin-top:16px;padding:16px;border-radius:var(--radius-input);background:var(--input-bg);border:1px solid var(--input-bd);">
-            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Flight lookup is coming. Drop your email and we'll let you know when it's live.</p>
-            <form id="flightLookupForm" autocomplete="off">
-              <input type="email" id="flightLookupEmail" placeholder="your@email.com" style="margin-bottom:10px;">
-              <button type="submit" class="btn-primary">Notify Me</button>
-            </form>
-            <p id="flightLookupSuccess" style="display:none;font-size:0.9rem;color:var(--success);margin-top:8px;">You're on the list ✈️</p>
-          </div>
-        </div>
+        <input type="datetime-local" id="flightDateTime">
       </div>
 
       <!-- Step 3: Security lane -->
@@ -1016,9 +1245,9 @@
           <h3>Security lane</h3>
         </div>
         <div class="seg-control" id="securityControl">
-          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard</button>
-          <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck</button>
-          <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR</button>
+          <button type="button" class="seg-btn active" id="secStandard" data-wait="10">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
+          <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Enrolled members keep shoes, laptops, and liquids in their bag. Average wait at MCI: 4-5 minutes. Costs $78 for 5 years at tsa.gov/precheck — worth it if you fly more than twice a year.</span></span></button>
+          <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Biometric screening that skips the ID check queue — you still go through TSA screening after. Average wait at MCI: 3-4 minutes. Available at 3 MCI checkpoints. Learn more at clearme.com</span></span></button>
         </div>
         <p class="note-text">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
@@ -1153,20 +1382,32 @@
         <span id="leaveTimeNumber"></span>
         <span id="leaveTimePeriod" class="period"></span>
       </div>
+      <p class="viral-nudge" id="viralNudge" style="display:none;">Know someone who always cuts it close? <span class="viral-nudge-link" onclick="shareWhatsApp()">Send them this ✈️</span></p>
       <p id="flightTimeSubtext" class="flight-subtext"></p>
       <div id="statusPill" class="status-pill"></div>
+      <p id="bufferExplainer" class="buffer-explainer"></p>
       <div id="breakdownChips" class="breakdown-chips"></div>
       <p id="resultTone" class="result-tone"></p>
     </div>
 
-    <!-- Post-result sections (populated in Steps 6 & 7) -->
+    <p id="recalculateBtn" class="recalculate-link" style="display:none;" onclick="recalculate()">↑ Adjust my inputs</p>
+
+    <!-- Ko-fi Section -->
+    <div id="kofiSection" style="display:none;">
+      <div class="card kofi-card">
+        <p class="kofi-top">Free. No ads. No upsell. Built to settle the argument once and for all.</p>
+        <p class="kofi-sub">If it helped — a coffee keeps it running.</p>
+        <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
+        <p class="kofi-fine">100% goes to keeping this free.</p>
+      </div>
+    </div>
+
+    <!-- Post-result sections -->
     <div id="shareSection" style="display:none;">
       <div class="card">
         <h2 style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
         <p class="card-subhead">This took 7 seconds. Help a Kansas Citian make their flight.</p>
-        <button id="instagramBtn" class="share-btn share-btn-gold" onclick="downloadInstagramCard()">📸 Download Instagram Card</button>
-        <p class="share-prompt">Post to your story and tag a KC friend who always cuts it close ✈️</p>
-        <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send to My Driver</button>
+        <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send via WhatsApp</button>
         <div class="share-grid-2">
           <button id="facebookBtn" class="share-btn share-btn-facebook" onclick="shareFacebook()">Facebook</button>
           <button id="twitterBtn" class="share-btn share-btn-twitter" onclick="shareTwitter()">Twitter / X</button>
@@ -1195,19 +1436,11 @@
         <p id="emailSuccess" style="display:none;color:var(--success);font-weight:500;font-size:1rem;margin-top:16px;">✈️ Sent! The calculator has spoken.</p>
       </div>
     </div>
-    <div id="kofiSection" style="display:none;">
-      <div class="card" style="padding:32px;text-align:center;background:rgba(255,255,255,0.02);">
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;color:var(--white);margin-bottom:6px;">Free. No ads. No upsell.</p>
-        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.9rem;color:var(--muted);margin-bottom:20px;">If it helped — a coffee keeps it running.</p>
-        <a href="https://ko-fi.com/ysilver" target="_blank" rel="noopener" id="kofiBtn" style="display:block;width:100%;background:#ff5f5f;color:white;border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;transition:background 0.2s,transform 0.2s;">☕ Buy me a coffee — $3</a>
-        <p style="font-size:0.72rem;color:var(--muted);margin-top:8px;">100% goes to keeping this free.</p>
-      </div>
-    </div>
 
     <!-- About / SEO Section -->
     <section style="border-top:1px solid var(--card-bd);margin-top:48px;padding-top:40px;">
       <h2 style="font-size:1.8rem;color:var(--white);">Why Kansas City needed this</h2>
-      <p style="color:var(--text-muted);margin-top:16px;line-height:1.7;">Make My Flight KC is a free departure calculator built specifically for Kansas City International Airport (MCI). It combines real drive times from KC neighborhoods, TSA security estimates, parking buffer times, and local conditions to tell you exactly when to leave for your flight.</p>
+      <p style="color:var(--text-muted);margin-top:16px;line-height:1.7;">Make My Flight KC is a free departure calculator built specifically for Kansas City International Airport (MCI). It combines real drive times from KC neighborhoods, TSA security estimates, parking buffer times, and local conditions to tell you exactly when to leave for your flight — whether that's tomorrow morning or a trip you're planning next month. If this saved you a stress spiral or helped you make your flight on time, you can say thank you by <a href='https://ko-fi.com/ysilver' target='_blank' style='color:var(--gold);'>buying me a coffee ☕</a> — it keeps the tool free and maintained.</p>
 
       <div style="margin-top:32px;">
         <h3 style="color:var(--gold);font-size:clamp(1.1rem,3vw,1.3rem);">How early should I arrive at MCI?</h3>
@@ -1235,33 +1468,48 @@
       </div>
     </section>
 
-    <!-- Disclaimer (collapsed) -->
-    <div style="margin-top:32px;text-align:center;">
-      <span id="disclaimerToggle" role="button" tabindex="0" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);cursor:pointer;">⚠️ Important disclaimer</span>
-      <div id="disclaimerText" style="display:none;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);line-height:1.6;padding:12px 0;text-align:left;max-width:600px;margin:0 auto;">This tool is for informational purposes only. Estimates are based on historical averages and publicly available data. The creator assumes zero liability for missed flights, travel disruptions, damages, or losses of any kind arising from use of this tool. You are solely responsible for determining when to leave for the airport. Not affiliated with Kansas City International Airport, the City of Kansas City, or any airline. Always verify current conditions at FlyKC.com before traveling. When in doubt, leave earlier.</div>
+    <!-- Always-visible Ko-fi -->
+    <div style="margin-top:48px;">
+      <div class="card kofi-card">
+        <p class="kofi-top">Find this useful?</p>
+        <p class="kofi-sub">It's free, ad-free, and built by a KC local. If it saves you a stress spiral — coffee keeps it running.</p>
+        <a href="https://ko-fi.com/ysilver" target="_blank" class="kofi-btn" onclick="gtag('event','kofi_clicked')">☕ Buy me a coffee — $3</a>
+        <p class="kofi-fine">100% goes to keeping this free.</p>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer style="text-align:center;padding:32px 0;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--muted);line-height:1.7;">
-      <p>Built with ✈️ for Kansas City by <a href="https://yosefsilver.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Yosef Silver</a></p>
-      <p style="margin-top:6px;">
-        <a href="https://yosefsilver.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">yosefsilver.com</a>
-        &middot;
-        <a href="https://instagram.com/yosefsilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">@yosefsilver</a>
-        &middot;
-        <a href="https://linkedin.com/in/yosefsilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">LinkedIn</a>
-      </p>
-      <p style="margin-top:6px;"><a href="mailto:departures@makemyflightkc.com" style="color:var(--gold);text-decoration:none;">departures@makemyflightkc.com</a></p>
-      <p style="margin-top:6px;"><a href="https://ko-fi.com/ysilver" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">ko-fi.com/ysilver</a></p>
-      <p style="margin-top:6px;">
-        <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>
-        &middot;
-        <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Terms of Use</a>
-      </p>
-      <p style="margin-top:6px;"><span id="footerDisclaimerToggle" role="button" tabindex="0" style="cursor:pointer;">⚠️ Important disclaimer</span></p>
-    </footer>
-
   </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-plane">✈️</span>
+        <span class="footer-name">Make My Flight KC</span>
+      </div>
+      <p class="footer-tagline">Built for Kansas City. Free forever.</p>
+      <div class="footer-links-row">
+        <a href="https://yosefsilver.com" target="_blank">yosefsilver.com</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="https://instagram.com/yosefsilver" target="_blank">@yosefsilver</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="https://linkedin.com/in/yosefsilver" target="_blank">LinkedIn</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="mailto:departures@makemyflightkc.com">departures@makemyflightkc.com</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="https://ko-fi.com/ysilver" target="_blank">☕ ko-fi.com/ysilver</a>
+      </div>
+      <div class="footer-links-row">
+        <a href="/privacy.html" target="_blank">Privacy Policy</a>
+        <span class="footer-dot">&middot;</span>
+        <a href="/terms.html" target="_blank">Terms of Use</a>
+      </div>
+      <p class="footer-disclaimer-toggle" onclick="toggleDisclaimer()">⚠️ Important disclaimer</p>
+      <div id="disclaimerText" class="footer-disclaimer-text" style="display:none;">This tool is for informational purposes only. Estimates are based on historical averages and publicly available data. The creator assumes zero liability for missed flights, travel disruptions, damages, or losses of any kind arising from use of this tool. You are solely responsible for determining when to leave for the airport. Not affiliated with Kansas City International Airport, the City of Kansas City, or any airline. Always verify current conditions at FlyKC.com before traveling. When in doubt, leave earlier.</div>
+      <p class="footer-copy">&copy; 2026 Make My Flight KC</p>
+    </div>
+  </footer>
 
   <!-- Cookie Notice -->
   <div id="cookieNotice" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0d2044;padding:14px 20px;align-items:center;justify-content:space-between;gap:16px;">
@@ -1402,7 +1650,8 @@
       "Lawson": 40,
       "Richmond": 50,
       "Pleasant Hill": 48,
-      "Drexel": 62
+      "Drexel": 62,
+      "Zona Rosa": 16
     };
 
     var ALIASES = {
@@ -1582,21 +1831,9 @@
     })();
 
     /* ============================================
-       FLIGHT INPUT TABS
+       SET DEFAULT FLIGHT DATETIME
        ============================================ */
-    (function initFlightTabs() {
-      var tabs = document.querySelectorAll('.flight-tab');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          tabs.forEach(function (t) { t.classList.remove('active'); });
-          tab.classList.add('active');
-          document.getElementById('flightTimePanel').style.display = 'none';
-          document.getElementById('flightLookupPanel').style.display = 'none';
-          document.getElementById(tab.getAttribute('data-panel')).style.display = 'block';
-        });
-      });
-
-      // Set default datetime to tomorrow at 09:00
+    (function initFlightDateTime() {
       var tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       tomorrow.setHours(9, 0, 0, 0);
@@ -1605,27 +1842,6 @@
       var d = String(tomorrow.getDate()).padStart(2, '0');
       document.getElementById('flightDateTime').value = y + '-' + m + '-' + d + 'T09:00';
     })();
-
-    /* ============================================
-       FLIGHT LOOKUP EMAIL (FORMSPREE)
-       ============================================ */
-    document.getElementById('flightLookupForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var email = document.getElementById('flightLookupEmail').value;
-      if (!email) return;
-      fetch('https://formspree.io/f/mlgorllg', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, form_type: 'flight_lookup' })
-      }).then(function () {
-        document.getElementById('flightLookupSuccess').style.display = 'block';
-        document.getElementById('flightLookupForm').style.display = 'none';
-        if (typeof gtag === 'function') gtag('event', 'flight_lookup_email_captured');
-      }).catch(function () {
-        document.getElementById('flightLookupSuccess').style.display = 'block';
-        document.getElementById('flightLookupForm').style.display = 'none';
-      });
-    });
 
     /* ============================================
        SECURITY LANE SEGMENTED CONTROL
@@ -1878,15 +2094,33 @@
       if (spare > 30) {
         statusText = 'ON TRACK';
         statusClass = 'status-green';
-        toneText = "MCI's new terminal was built for this. You've got time.";
       } else if (spare >= 10) {
         statusText = 'CUTTING IT CLOSE';
         statusClass = 'status-amber';
-        toneText = 'Move with purpose. No second coffee.';
       } else {
         statusText = 'TIGHT — LEAVE NOW';
         statusClass = 'status-red';
-        toneText = 'Leave now. The airport will forgive you for speed-walking.';
+      }
+
+      // Flight date detection
+      var today = new Date();
+      var tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      var isToday = flightDate.toDateString() === today.toDateString();
+      var isTomorrow = flightDate.toDateString() === tomorrow.toDateString();
+      var isFuture = !isToday && !isTomorrow;
+
+      if (isToday) {
+        if (statusClass === 'status-green')
+          toneText = "MCI's new terminal was built for this. You've got time. Now go.";
+        else if (statusClass === 'status-amber')
+          toneText = 'You can make this. Stop reading this and start moving.';
+        else
+          toneText = 'Go. Right now. You can stress about parking on the way home.';
+      } else if (isTomorrow) {
+        toneText = "You're all set for tomorrow. Screenshot this or add it to your calendar so you don't forget.";
+      } else {
+        toneText = 'Good planning. Come back day-of and recalculate with live traffic conditions in mind. MCI will be ready for you.';
       }
 
       currentBreakdown = {
@@ -1908,6 +2142,18 @@
       // Step 6 — Render result
       renderResult(currentBreakdown, displayHour, displayMin, period, currentFlightTime, statusText, statusClass, toneText);
 
+      // Buffer explainer
+      var bufferExplainer = document.getElementById('bufferExplainer');
+      if (bufferExplainer) {
+        if (spare > 0) {
+          bufferExplainer.textContent = 'You have approximately ' + spare + ' minutes of buffer before your flight closes.';
+          bufferExplainer.style.color = '';
+        } else {
+          bufferExplainer.textContent = 'You are cutting it extremely close. Leave immediately.';
+          bufferExplainer.style.color = 'var(--danger)';
+        }
+      }
+
       // Step 7 — Show post-result sections
       var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
       sectionsToShow.forEach(function (id, i) {
@@ -1927,6 +2173,18 @@
           }
         }, 400 + (i * 150));
       });
+
+      // Show recalculate button
+      var recalcBtn = document.getElementById('recalculateBtn');
+      if (recalcBtn) recalcBtn.style.display = 'block';
+
+      // Show viral nudge
+      var viralNudge = document.getElementById('viralNudge');
+      if (viralNudge) viralNudge.style.display = 'block';
+    }
+
+    function recalculate() {
+      document.getElementById('calculatorForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /* ============================================
@@ -2029,86 +2287,12 @@
     /* ============================================
        INSTAGRAM CARD
        ============================================ */
-    function downloadInstagramCard() {
-      var canvas = document.createElement('canvas');
-      canvas.width = 1080;
-      canvas.height = 1080;
-      var ctx = canvas.getContext('2d');
-
-      // Background
-      ctx.fillStyle = '#0a1628';
-      ctx.fillRect(0, 0, 1080, 1080);
-
-      // Radial gradient overlay
-      var grad = ctx.createRadialGradient(540, 0, 0, 540, 540, 900);
-      grad.addColorStop(0, 'rgba(30,58,112,0.8)');
-      grad.addColorStop(1, 'rgba(10,22,40,0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 1080);
-
-      // Top gold line
-      ctx.strokeStyle = '#f0b429';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(140, 200);
-      ctx.lineTo(940, 200);
-      ctx.stroke();
-
-      // Brand name
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '600 52px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('MAKE MY FLIGHT KC', 540, 160);
-
-      // LEAVE BY label
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '400 38px Arial';
-      ctx.fillText('LEAVE BY', 540, 400);
-
-      // Leave time (big)
-      ctx.fillStyle = '#f0b429';
-      ctx.font = 'bold 220px Arial';
-      ctx.fillText(currentLeaveTime, 540, 650);
-
-      // Flight time subtext
-      ctx.fillStyle = '#ede9df';
-      ctx.font = '300 42px Arial';
-      ctx.fillText('For your ' + currentFlightTime + ' MCI departure', 540, 760);
-
-      // Bottom gold line
-      ctx.strokeStyle = '#f0b429';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(140, 860);
-      ctx.lineTo(940, 860);
-      ctx.stroke();
-
-      // URL
-      ctx.fillStyle = '#8d99b2';
-      ctx.font = '400 36px Arial';
-      ctx.fillText('makemyflightkc.com', 540, 930);
-
-      // Download
-      canvas.toBlob(function (blob) {
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'make-my-flight-kc.png';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-
-      if (typeof gtag === 'function') gtag('event', 'instagram_card_downloaded');
-    }
-
     /* ============================================
        WHATSAPP
        ============================================ */
     function shareWhatsApp() {
       var msg = encodeURIComponent(
-        'I need to leave by ' + currentLeaveTime +
-        ' for my ' + currentFlightTime + ' MCI flight. Calculate yours: ' +
-        'https://makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
+        'There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. I just calculated my MCI leave time — you should too. One of us is very wrong. makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
       );
       window.open('https://wa.me/?text=' + msg, '_blank');
       if (typeof gtag === 'function') gtag('event', 'whatsapp_shared');
@@ -2118,11 +2302,34 @@
        FACEBOOK
        ============================================ */
     function shareFacebook() {
+      document.getElementById('fbModal').style.display = 'flex';
+      if (typeof gtag === 'function') gtag('event', 'facebook_shared');
+    }
+
+    function closeFbModal(e) {
+      if (!e || e.target === document.getElementById('fbModal')) {
+        document.getElementById('fbModal').style.display = 'none';
+      }
+    }
+
+    function copyFbText() {
+      var text = document.getElementById('fbCopyText').textContent.trim();
+      navigator.clipboard.writeText(text);
+      var btn = document.querySelector('.fb-btn-copy');
+      btn.textContent = 'Copied \u2713';
+      btn.style.background = 'var(--success)';
+      setTimeout(function () {
+        btn.textContent = 'Copy Text';
+        btn.style.background = '';
+      }, 2000);
+    }
+
+    function openFacebook() {
       var url = encodeURIComponent(
         'https://makemyflightkc.com?utm_source=facebook&utm_medium=share&utm_campaign=result'
       );
       window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
-      if (typeof gtag === 'function') gtag('event', 'facebook_shared');
+      closeFbModal();
     }
 
     /* ============================================
@@ -2255,43 +2462,13 @@
     })();
 
     /* ============================================
-       KO-FI BUTTON HOVER + TRACKING
-       ============================================ */
-    (function initKofi() {
-      var btn = document.getElementById('kofiBtn');
-      btn.addEventListener('mouseenter', function () {
-        btn.style.background = '#ff4444';
-        btn.style.transform = 'translateY(-2px)';
-      });
-      btn.addEventListener('mouseleave', function () {
-        btn.style.background = '#ff5f5f';
-        btn.style.transform = 'translateY(0)';
-      });
-      btn.addEventListener('click', function () {
-        if (typeof gtag === 'function') gtag('event', 'kofi_clicked');
-      });
-    })();
-
-    /* ============================================
        DISCLAIMER TOGGLE
        ============================================ */
-    function setupDisclaimerToggle(triggerId) {
-      var trigger = document.getElementById(triggerId);
-      if (!trigger) return;
-      trigger.addEventListener('click', function () {
-        var text = document.getElementById('disclaimerText');
-        text.style.display = text.style.display === 'none' ? 'block' : 'none';
-        text.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-      trigger.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          trigger.click();
-        }
-      });
+    function toggleDisclaimer() {
+      var text = document.getElementById('disclaimerText');
+      text.style.display = text.style.display === 'none' ? 'block' : 'none';
+      text.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    setupDisclaimerToggle('disclaimerToggle');
-    setupDisclaimerToggle('footerDisclaimerToggle');
 
     /* ============================================
        COOKIE NOTICE
@@ -2306,13 +2483,20 @@
       });
     })();
 
-    /* ============================================
-       FOOTER LINK HOVER UNDERLINES
-       ============================================ */
-    document.querySelectorAll('footer a').forEach(function (a) {
-      a.addEventListener('mouseenter', function () { a.style.textDecoration = 'underline'; });
-      a.addEventListener('mouseleave', function () { a.style.textDecoration = 'none'; });
-    });
   </script>
+
+  <!-- Facebook Share Modal -->
+  <div id="fbModal" class="fb-modal-overlay" style="display:none;" onclick="closeFbModal(event)">
+    <div class="fb-modal-card">
+      <h3 class="fb-modal-heading">Copy this, then post to Facebook:</h3>
+      <div class="fb-copy-box" id="fbCopyText">There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it — specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity</div>
+      <div class="fb-modal-buttons">
+        <button class="fb-btn-copy" onclick="copyFbText()">Copy Text</button>
+        <button class="fb-btn-open" onclick="openFacebook()">Open Facebook</button>
+      </div>
+      <p class="fb-modal-dismiss" onclick="closeFbModal()">Cancel</p>
+    </div>
+  </div>
+
 </body>
 </html>
