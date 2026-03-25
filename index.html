@@ -415,6 +415,33 @@
       font-weight: 700;
     }
 
+    .advanced-toggle-btn {
+      width: 100%;
+      padding: 16px;
+      background: transparent;
+      border: 1.5px dashed var(--gold);
+      border-radius: 14px;
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+      margin: 8px 0;
+      display: block;
+    }
+
+    .advanced-toggle-btn:hover {
+      background: rgba(240,180,41,0.06);
+      border-style: solid;
+    }
+
+    .advanced-toggle-btn.open {
+      border-style: solid;
+      background: rgba(240,180,41,0.06);
+    }
+
     .pill {
       font-family: 'DM Sans', sans-serif;
       font-size: clamp(0.85rem, 2.5vw, 0.95rem);
@@ -1845,7 +1872,7 @@
       </div>
 
       <!-- Advanced Mode Toggle -->
-      <button type="button" id="advancedToggle" style="width:100%;background:transparent;border:1px solid var(--card-border);border-radius:10px;padding:14px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;margin-top:16px;">+ More factors</button>
+      <button type="button" id="advancedToggle" class="advanced-toggle-btn">✦ Refine my result</button>
 
       <!-- Advanced Section -->
       <div id="advancedSection" style="display:none;">
@@ -2121,7 +2148,8 @@
         twitterMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #FlyMCI #KansasCity",
         fbMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it \u2014 specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity",
         feedbackBtn: "\uD83D\uDCAC Feedback",
-        advancedToggle: "+ More factors",
+        advancedToggle: "\u2726 Refine my result",
+        advancedClose: "\u2726 Fewer factors",
         airportStyle1: "Straight to gate",
         airportStyle2: "Browse & grab a bite",
         airportStyle3: "Quick lounge stop",
@@ -2185,7 +2213,8 @@
         twitterMsg: "The two-hour airport rule is a myth. Here's what you actually need for MCI. makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result #MakeMyFlightKC #MCI",
         fbMsg: "The two-hour airport rule is for people who haven't done the math. I did the math. makemyflightkc.com #MakeMyFlightKC #FlyMCI",
         feedbackBtn: "Talk to me",
-        advancedToggle: "+ More variables",
+        advancedToggle: "\u2726 More variables",
+        advancedClose: "\u2726 Fewer variables",
         airportStyle1: "Straight to gate",
         airportStyle2: "Fine. One snack.",
         airportStyle3: "Quick lounge stop",
@@ -2271,6 +2300,7 @@
       // Advanced toggle
       var advToggle = document.getElementById('advancedToggle');
       if (advToggle && !advToggle.classList.contains('open')) advToggle.textContent = c.advancedToggle;
+      if (advToggle && advToggle.classList.contains('open')) advToggle.textContent = c.advancedClose;
       // Facebook modal copy
       var fbCopyText = document.getElementById('fbCopyText');
       if (fbCopyText) fbCopyText.textContent = c.fbMsg;
@@ -3034,7 +3064,9 @@
         isOpen = !isOpen;
         advancedModeUsed = true;
         section.style.display = isOpen ? 'block' : 'none';
-        toggle.textContent = isOpen ? '— Fewer factors' : '+ More factors';
+        var c = COPY[currentVoice] || COPY.kc;
+        toggle.textContent = isOpen ? c.advancedClose : c.advancedToggle;
+        toggle.classList.toggle('open', isOpen);
         if (isOpen && typeof gtag === 'function') gtag('event', 'advanced_mode_opened');
       });
 
