@@ -1763,6 +1763,20 @@
         <p class="note-text" id="securityNote">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
 
+      <!-- Step 3.5: How do you fly? -->
+      <div class="card">
+        <div class="step-title">
+          <h3><span class="card-title-text">How do you fly?</span></h3>
+        </div>
+        <div class="pill-group" id="airportStyleControl">
+          <button type="button" class="pill active" data-buf="0" id="airportStyle1"><span id="airportStyle1Label">Straight to gate</span></button>
+          <button type="button" class="pill" data-buf="25" id="airportStyle2"><span id="airportStyle2Label">Browse &amp; grab a bite</span></button>
+          <button type="button" class="pill" data-buf="40" id="airportStyle3"><span id="airportStyle3Label">Quick lounge stop</span></button>
+          <button type="button" class="pill" data-buf="70" id="airportStyle4"><span id="airportStyle4Label">Full lounge experience</span></button>
+        </div>
+        <p class="note-text" id="airportStyleNote">You know where you're going. No detours.</p>
+      </div>
+
       <!-- Step 4: Checking bags? -->
       <div class="card">
         <div class="step-title">
@@ -1901,7 +1915,7 @@
       <div id="statusPill" class="status-pill"></div>
       <p id="bufferExplainer" class="buffer-explainer"></p>
       <div id="breakdownChips" class="breakdown-chips"></div>
-      <p id="securityNote" class="security-note" style="display:none;">MCI's security is genuinely one of the fastest in the country. Average 7-15 min standard, 4-5 min PreCheck. Upgrade to PreCheck for $78 — pays for itself in time saved.</p>
+      <p id="securityReassurance" class="security-note" style="display:none;">MCI's security is genuinely one of the fastest in the country — 7-15 min standard, 4-5 min PreCheck.</p>
       <p id="resultTone" class="result-tone"></p>
     </div>
 
@@ -2069,6 +2083,14 @@
         fbMsg: "There are two types of KC travelers. One wants to leave at 5 AM. The other thinks 45 minutes is plenty. This free calculator finally settles it \u2014 specific to MCI, specific to your KC neighborhood. Stop guessing. makemyflightkc.com #MakeMyFlightKC #FlyMCI #KansasCity",
         feedbackBtn: "\uD83D\uDCAC Feedback",
         advancedToggle: "+ More factors",
+        airportStyle1: "Straight to gate",
+        airportStyle2: "Browse & grab a bite",
+        airportStyle3: "Quick lounge stop",
+        airportStyle4: "Full lounge experience",
+        airportNote1: "You know where you're going. No detours.",
+        airportNote2: "MCI has great local spots. Budget time to enjoy one.",
+        airportNote3: "MCI has two lounges \u2014 Delta Sky Club in Concourse B and Escape Lounge in Concourse A near gate A5. Open to all travelers.",
+        airportNote4: "You're there for the lounge. The flight is almost secondary. We respect it.",
         securityNote: "TSA PreCheck lanes at MCI open daily 2\u201310 PM on Concourses B & C",
         bagsNote: "",
         transportNote: "The blue bus runs every 20 minutes 24/7. Budget for a potential wait.",
@@ -2124,6 +2146,14 @@
         fbMsg: "The two-hour airport rule is for people who haven't done the math. I did the math. makemyflightkc.com #MakeMyFlightKC #FlyMCI",
         feedbackBtn: "Talk to me",
         advancedToggle: "+ More variables",
+        airportStyle1: "Straight to gate",
+        airportStyle2: "Fine. One snack.",
+        airportStyle3: "Quick lounge stop",
+        airportStyle4: "Full lounge. Obviously.",
+        airportNote1: "Good. That's what airports are for.",
+        airportNote2: "Make it quick.",
+        airportNote3: "In, drink, out. You know the drill.",
+        airportNote4: "The only correct answer if you have access. Take your time. The gate will still be there.",
         securityNote: "PreCheck lanes at MCI: 2\u201310 PM. Plan accordingly.",
         bagsNote: "",
         transportNote: "Economy shuttle runs every 20 minutes. You've been warned.",
@@ -2204,6 +2234,25 @@
       // Facebook modal copy
       var fbCopyText = document.getElementById('fbCopyText');
       if (fbCopyText) fbCopyText.textContent = c.fbMsg;
+      // Airport style labels
+      var as1 = document.getElementById('airportStyle1Label');
+      if (as1 && c.airportStyle1) as1.textContent = c.airportStyle1;
+      var as2 = document.getElementById('airportStyle2Label');
+      if (as2 && c.airportStyle2) as2.textContent = c.airportStyle2;
+      var as3 = document.getElementById('airportStyle3Label');
+      if (as3 && c.airportStyle3) as3.textContent = c.airportStyle3;
+      var as4 = document.getElementById('airportStyle4Label');
+      if (as4 && c.airportStyle4) as4.textContent = c.airportStyle4;
+      // Airport style note — update based on currently active pill
+      var asNote = document.getElementById('airportStyleNote');
+      if (asNote) {
+        var activeAsPill = document.querySelector('#airportStyleControl .pill.active');
+        var asBuf = activeAsPill ? parseInt(activeAsPill.getAttribute('data-buf')) : 0;
+        if (asBuf === 0) asNote.textContent = c.airportNote1;
+        else if (asBuf === 25) asNote.textContent = c.airportNote2;
+        else if (asBuf === 40) asNote.textContent = c.airportNote3;
+        else if (asBuf === 70) asNote.textContent = c.airportNote4;
+      }
       // Notes
       var secNote = document.getElementById('securityNote');
       if (secNote && c.securityNote) secNote.textContent = c.securityNote;
@@ -2613,6 +2662,25 @@
     });
 
     /* ============================================
+       AIRPORT STYLE PILLS
+       ============================================ */
+    document.getElementById('airportStyleControl').addEventListener('click', function (e) {
+      var pill = e.target.closest('.pill');
+      if (!pill) return;
+      document.querySelectorAll('#airportStyleControl .pill').forEach(function (p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+      var buf = parseInt(pill.getAttribute('data-buf'));
+      var c = COPY[currentVoice];
+      var note = document.getElementById('airportStyleNote');
+      if (note) {
+        if (buf === 0) note.textContent = c.airportNote1;
+        else if (buf === 25) note.textContent = c.airportNote2;
+        else if (buf === 40) note.textContent = c.airportNote3;
+        else if (buf === 70) note.textContent = c.airportNote4;
+      }
+    });
+
+    /* ============================================
        TRANSPORT MODE — ECONOMY LOT NOTE
        ============================================ */
     document.getElementById('transportMode').addEventListener('change', function () {
@@ -2780,10 +2848,14 @@
       var parkingBuffer = parseInt(document.getElementById('transportMode').value);
 
       // Gate walk (fixed MCI average)
-      var gateWalk = 8;
+      var gateWalk = 15;
 
       // Boarding buffer
       const boardingBuffer = 35;
+
+      // Airport style buffer
+      var activeAirportStyle = document.querySelector('#airportStyleControl .pill.active');
+      var airportStyleBuffer = activeAirportStyle ? parseInt(activeAirportStyle.getAttribute('data-buf')) : 0;
 
       // Advanced mode values (default 0 if never opened)
       var intlBuffer = 0;
@@ -2823,6 +2895,7 @@
         parkingBuffer +
         gateWalk +
         boardingBuffer +
+        airportStyleBuffer +
         intlBuffer +
         airlineBuffer +
         partyBuffer +
@@ -2901,6 +2974,7 @@
         adjustedSecurity: adjustedSecurity,
         gateWalk: gateWalk,
         boardingBuffer: boardingBuffer,
+        airportStyleBuffer: airportStyleBuffer,
         bagBuffer: bagBuffer,
         intlBuffer: intlBuffer,
         partyBuffer: partyBuffer,
@@ -2918,17 +2992,12 @@
       // Buffer explainer
       var bufferExplainer = document.getElementById('bufferExplainer');
       if (bufferExplainer) {
-        if (spare > 0) {
-          bufferExplainer.textContent = 'Your leave time gets you to the gate before boarding begins — not scrambling to your seat as the doors close.';
-          bufferExplainer.style.color = '';
-        } else {
-          bufferExplainer.textContent = 'You are cutting it extremely close. Leave immediately.';
-          bufferExplainer.style.color = 'var(--danger)';
-        }
+        bufferExplainer.textContent = 'Your leave time gets you to the gate before boarding begins \u2014 not scrambling to your seat as the doors close.';
+        bufferExplainer.style.color = '';
       }
 
       // Show security reassurance note
-      document.getElementById('securityNote').style.display = 'block';
+      document.getElementById('securityReassurance').style.display = 'block';
 
       // Step 7 — Show post-result sections
       var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
@@ -2996,6 +3065,8 @@
         { label: 'Boarding', value: 35 }
       ];
 
+      if (breakdown.airportStyleBuffer === 25) chips.push({ label: 'Food', value: breakdown.airportStyleBuffer });
+      else if (breakdown.airportStyleBuffer >= 40) chips.push({ label: 'Lounge', value: breakdown.airportStyleBuffer });
       if (breakdown.bagBuffer > 0) chips.push({ label: 'Bags', value: breakdown.bagBuffer });
       if (advancedModeUsed && breakdown.intlBuffer > 0) chips.push({ label: 'International', value: breakdown.intlBuffer });
       if (advancedModeUsed && breakdown.partyBuffer > 0) chips.push({ label: 'Party', value: breakdown.partyBuffer });
