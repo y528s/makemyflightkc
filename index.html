@@ -817,6 +817,112 @@
       padding-top: 20px;
       margin-top: 8px;
     }
+
+    /* ============================================
+       SHARE SECTION
+       ============================================ */
+    .card-subhead {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .share-btn {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+    }
+
+    .share-btn:active {
+      transform: translateY(0);
+    }
+
+    .share-btn-gold {
+      background: var(--gold);
+      color: #0a1628;
+    }
+
+    .share-btn-gold:hover {
+      background: var(--gold-light);
+      box-shadow: 0 8px 24px rgba(240,180,41,0.3);
+    }
+
+    .share-btn-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .share-btn-facebook {
+      background: #1877F2;
+      color: white;
+    }
+
+    .share-btn-twitter {
+      background: #000000;
+      color: white;
+    }
+
+    .share-btn-cal {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    [data-theme="light"] .share-btn-cal {
+      background: white;
+      border: 1px solid #e5e0d5;
+      color: #0a1628;
+    }
+
+    .share-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .share-grid-2 .share-btn {
+      margin-bottom: 0;
+    }
+
+    .share-prompt {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      margin-top: -6px;
+      margin-bottom: 16px;
+    }
+
+    .copy-link {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 12px;
+      margin: 0;
+      transition: color 0.2s;
+    }
+
+    .copy-link:hover {
+      color: var(--gold);
+    }
   </style>
 </head>
 <body>
@@ -1054,7 +1160,24 @@
     </div>
 
     <!-- Post-result sections (populated in Steps 6 & 7) -->
-    <div id="shareSection" style="display:none;"></div>
+    <div id="shareSection" style="display:none;">
+      <div class="card">
+        <h2 style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:1.2rem;">Share your leave time</h2>
+        <p class="card-subhead">This took 7 seconds. Help a Kansas Citian make their flight.</p>
+        <button id="instagramBtn" class="share-btn share-btn-gold" onclick="downloadInstagramCard()">📸 Download Instagram Card</button>
+        <p class="share-prompt">Post to your story and tag a KC friend who always cuts it close ✈️</p>
+        <button id="whatsappBtn" class="share-btn share-btn-whatsapp" onclick="shareWhatsApp()">💬 Send to My Driver</button>
+        <div class="share-grid-2">
+          <button id="facebookBtn" class="share-btn share-btn-facebook" onclick="shareFacebook()">Facebook</button>
+          <button id="twitterBtn" class="share-btn share-btn-twitter" onclick="shareTwitter()">Twitter / X</button>
+        </div>
+        <div class="share-grid-2">
+          <button id="googleCalBtn" class="share-btn share-btn-cal" onclick="addGoogleCal()">📅 Google Calendar</button>
+          <button id="appleCalBtn" class="share-btn share-btn-cal" onclick="addAppleCal()">🍎 Apple Calendar</button>
+        </div>
+        <p id="copyBtn" class="copy-link" onclick="copyToClipboard()">Copy to clipboard</p>
+      </div>
+    </div>
     <div id="emailCapture" style="display:none;"></div>
     <div id="kofiSection" style="display:none;"></div>
 
@@ -1264,6 +1387,8 @@
     var currentLeaveTime = '';
     var currentFlightTime = '';
     var currentBreakdown = null;
+    var currentLeaveHour = 0;
+    var currentLeaveMin = 0;
 
     /* ============================================
        AUTOCOMPLETE
@@ -1693,6 +1818,8 @@
 
       var leaveHour = Math.floor(leaveMinutes / 60);
       var leaveMin = leaveMinutes % 60;
+      currentLeaveHour = leaveHour;
+      currentLeaveMin = leaveMin;
       var period = leaveHour >= 12 ? 'PM' : 'AM';
       var displayHour = leaveHour > 12 ? leaveHour - 12 : leaveHour === 0 ? 12 : leaveHour;
       var displayMin = leaveMin.toString().padStart(2, '0');
@@ -1838,6 +1965,211 @@
        CALCULATE BUTTON
        ============================================ */
     document.getElementById('calculateBtn').addEventListener('click', calculate);
+
+    /* ============================================
+       SHARE HELPERS
+       ============================================ */
+    function formatDateForGCal(date) {
+      var pad = function (n) { return n.toString().padStart(2, '0'); };
+      return date.getFullYear().toString() +
+        pad(date.getMonth() + 1) +
+        pad(date.getDate()) + 'T' +
+        pad(date.getHours()) +
+        pad(date.getMinutes()) + '00';
+    }
+
+    function getLeaveDateTime() {
+      var flightDateVal = document.getElementById('flightDateTime').value;
+      var base = new Date(flightDateVal);
+      base.setHours(currentLeaveHour);
+      base.setMinutes(currentLeaveMin);
+      base.setSeconds(0);
+      return base;
+    }
+
+    /* ============================================
+       INSTAGRAM CARD
+       ============================================ */
+    function downloadInstagramCard() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1080;
+      var ctx = canvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#0a1628';
+      ctx.fillRect(0, 0, 1080, 1080);
+
+      // Radial gradient overlay
+      var grad = ctx.createRadialGradient(540, 0, 0, 540, 540, 900);
+      grad.addColorStop(0, 'rgba(30,58,112,0.8)');
+      grad.addColorStop(1, 'rgba(10,22,40,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 1080);
+
+      // Top gold line
+      ctx.strokeStyle = '#f0b429';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(140, 200);
+      ctx.lineTo(940, 200);
+      ctx.stroke();
+
+      // Brand name
+      ctx.fillStyle = '#8d99b2';
+      ctx.font = '600 52px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('MAKE MY FLIGHT KC', 540, 160);
+
+      // LEAVE BY label
+      ctx.fillStyle = '#8d99b2';
+      ctx.font = '400 38px Arial';
+      ctx.fillText('LEAVE BY', 540, 400);
+
+      // Leave time (big)
+      ctx.fillStyle = '#f0b429';
+      ctx.font = 'bold 220px Arial';
+      ctx.fillText(currentLeaveTime, 540, 650);
+
+      // Flight time subtext
+      ctx.fillStyle = '#ede9df';
+      ctx.font = '300 42px Arial';
+      ctx.fillText('For your ' + currentFlightTime + ' MCI departure', 540, 760);
+
+      // Bottom gold line
+      ctx.strokeStyle = '#f0b429';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(140, 860);
+      ctx.lineTo(940, 860);
+      ctx.stroke();
+
+      // URL
+      ctx.fillStyle = '#8d99b2';
+      ctx.font = '400 36px Arial';
+      ctx.fillText('makemyflightkc.com', 540, 930);
+
+      // Download
+      canvas.toBlob(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'make-my-flight-kc.png';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      if (typeof gtag === 'function') gtag('event', 'instagram_card_downloaded');
+    }
+
+    /* ============================================
+       WHATSAPP
+       ============================================ */
+    function shareWhatsApp() {
+      var msg = encodeURIComponent(
+        'I need to leave by ' + currentLeaveTime +
+        ' for my ' + currentFlightTime + ' MCI flight. Calculate yours: ' +
+        'https://makemyflightkc.com?utm_source=whatsapp&utm_medium=share&utm_campaign=result'
+      );
+      window.open('https://wa.me/?text=' + msg, '_blank');
+      if (typeof gtag === 'function') gtag('event', 'whatsapp_shared');
+    }
+
+    /* ============================================
+       FACEBOOK
+       ============================================ */
+    function shareFacebook() {
+      var url = encodeURIComponent(
+        'https://makemyflightkc.com?utm_source=facebook&utm_medium=share&utm_campaign=result'
+      );
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
+      if (typeof gtag === 'function') gtag('event', 'facebook_shared');
+    }
+
+    /* ============================================
+       TWITTER / X
+       ============================================ */
+    function shareTwitter() {
+      var text = encodeURIComponent(
+        'I need to leave by ' + currentLeaveTime +
+        ' for my ' + currentFlightTime + ' MCI flight. Calculated with Make My Flight KC. ' +
+        'What\'s yours? https://makemyflightkc.com?utm_source=twitter&utm_medium=share&utm_campaign=result ' +
+        '#MakeMyFlightKC #MCI'
+      );
+      window.open('https://twitter.com/intent/tweet?text=' + text, '_blank');
+      if (typeof gtag === 'function') gtag('event', 'twitter_shared');
+    }
+
+    /* ============================================
+       GOOGLE CALENDAR
+       ============================================ */
+    function addGoogleCal() {
+      var leaveDate = getLeaveDateTime();
+      var endDate = new Date(leaveDate.getTime() + 60 * 60 * 1000);
+      var start = formatDateForGCal(leaveDate);
+      var end = formatDateForGCal(endDate);
+      var title = encodeURIComponent('\u2708\uFE0F LEAVE FOR AIRPORT \u2014 Make My Flight KC');
+      var details = encodeURIComponent('Calculated by Make My Flight KC \u2014 makemyflightkc.com');
+      var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + title + '&dates=' + start + '/' + end + '&details=' + details;
+      window.open(url, '_blank');
+      if (typeof gtag === 'function') gtag('event', 'google_calendar_added');
+    }
+
+    /* ============================================
+       APPLE CALENDAR
+       ============================================ */
+    function addAppleCal() {
+      var leaveDate = getLeaveDateTime();
+      var endDate = new Date(leaveDate.getTime() + 60 * 60 * 1000);
+
+      var pad = function (n) { return n.toString().padStart(2, '0'); };
+      var fmt = function (d) {
+        return d.getFullYear().toString() + pad(d.getMonth() + 1) +
+          pad(d.getDate()) + 'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00';
+      };
+
+      var ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Make My Flight KC//EN',
+        'BEGIN:VEVENT',
+        'DTSTART:' + fmt(leaveDate),
+        'DTEND:' + fmt(endDate),
+        'SUMMARY:\u2708\uFE0F LEAVE FOR AIRPORT \u2014 Make My Flight KC',
+        'DESCRIPTION:Calculated by Make My Flight KC \u2014 makemyflightkc.com',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      var blob = new Blob([ics], { type: 'text/calendar' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'make-my-flight-kc.ics';
+      a.click();
+      URL.revokeObjectURL(url);
+      if (typeof gtag === 'function') gtag('event', 'apple_calendar_added');
+    }
+
+    /* ============================================
+       COPY TO CLIPBOARD
+       ============================================ */
+    function copyToClipboard() {
+      var text = 'I need to leave by ' + currentLeaveTime +
+        ' for my ' + currentFlightTime + ' MCI flight. ' +
+        'makemyflightkc.com?utm_source=clipboard&utm_medium=share&utm_campaign=result';
+
+      navigator.clipboard.writeText(text).then(function () {
+        var btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied \u2713';
+        btn.style.color = 'var(--success)';
+        setTimeout(function () {
+          btn.textContent = 'Copy to clipboard';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
 
     /* ============================================
        DISCLAIMER TOGGLE
