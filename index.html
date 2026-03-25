@@ -816,6 +816,95 @@
         <p class="note-text" id="economyNote" style="display:none;">The blue bus runs every 20 minutes 24/7. Budget for a potential wait.</p>
       </div>
 
+      <!-- Advanced Mode Toggle -->
+      <button type="button" id="advancedToggle" style="width:100%;background:transparent;border:1px solid var(--card-border);border-radius:10px;padding:14px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;margin-top:16px;">+ More factors</button>
+
+      <!-- Advanced Section -->
+      <div id="advancedSection" style="display:none;">
+
+        <!-- Advanced A: Flight Type -->
+        <div class="card">
+          <label class="form-label">Flight type</label>
+          <div class="pill-group" id="flightTypeControl">
+            <button type="button" class="pill active" data-buf="0">Domestic</button>
+            <button type="button" class="pill" data-buf="30">International</button>
+            <button type="button" class="pill" data-buf="50" style="font-size:clamp(0.75rem,2vw,0.85rem);">International w/ Preclearance (Canada, Ireland, UAE)</button>
+          </div>
+          <p class="note-text" id="preclearanceNote" style="display:none;">Preclearance means clearing customs before you board — common for Canada, Ireland, and UAE flights</p>
+        </div>
+
+        <!-- Advanced B: Airline -->
+        <div class="card">
+          <label class="form-label">Airline</label>
+          <select id="airlineSelect">
+            <option value="0">Most airlines (45 min cutoff)</option>
+            <option value="15">Spirit / Frontier / Allegiant (60 min cutoff)</option>
+            <option value="45">International carrier (90 min cutoff)</option>
+          </select>
+        </div>
+
+        <!-- Advanced C: Party Size -->
+        <div class="card">
+          <label class="form-label">Party size</label>
+          <div class="pill-group" id="partySizeControl">
+            <button type="button" class="pill active" data-buf="0">Solo</button>
+            <button type="button" class="pill" data-buf="5">2 adults</button>
+            <button type="button" class="pill" data-buf="10">Family with kids</button>
+            <button type="button" class="pill" data-buf="15">Group 4+</button>
+          </div>
+        </div>
+
+        <!-- Advanced D: Mobility -->
+        <div class="card">
+          <label class="form-label">Mobility needs</label>
+          <div class="pill-group" id="mobilityControl">
+            <button type="button" class="pill active" data-buf="0">Standard</button>
+            <button type="button" class="pill" data-buf="10">Slower pace</button>
+            <button type="button" class="pill" data-buf="15">Wheelchair / assist</button>
+          </div>
+        </div>
+
+        <!-- Advanced E: First Time -->
+        <div class="card">
+          <label class="form-label">First time at the new terminal?</label>
+          <div class="pill-group" id="firstTimeControl">
+            <button type="button" class="pill active" data-buf="0">No</button>
+            <button type="button" class="pill" data-buf="5">Yes</button>
+          </div>
+          <p class="note-text" id="firstTimeNote" style="display:none;">The new single terminal opened in 2023 — easy to navigate but give yourself a moment to get oriented</p>
+        </div>
+
+        <!-- Advanced F: Risk Tolerance -->
+        <div class="card">
+          <label class="form-label">If you miss this flight...</label>
+          <div class="pill-group" id="riskControl">
+            <button type="button" class="pill" data-buf="-15">Many alternatives</button>
+            <button type="button" class="pill active" data-buf="0">A few alternatives</button>
+            <button type="button" class="pill" data-buf="20">Last flight of the day</button>
+            <button type="button" class="pill" data-buf="40">Cannot miss this one</button>
+          </div>
+          <p class="note-text" id="riskNote" style="display:none;font-style:italic;">Wedding, once-in-a-lifetime connection, or someone will never forgive you</p>
+        </div>
+
+        <!-- Advanced G: Travel Day -->
+        <div class="card">
+          <label class="form-label">Travel day</label>
+          <select id="travelDay">
+            <option value="normal">Normal day</option>
+            <option value="holiday">Holiday peak (Thanksgiving, Christmas, NYE)</option>
+            <option value="summer">Summer peak (July / August)</option>
+            <option value="monday">Monday midday</option>
+            <option value="chiefs">Chiefs home game</option>
+            <option value="sporting">Sporting KC home game</option>
+            <option value="currents">KC Currents home game</option>
+            <option value="royals_day">Royals home game — day</option>
+            <option value="royals_evening">Royals home game — evening</option>
+          </select>
+          <div id="gameDayBanner" style="display:none;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.3);border-radius:10px;padding:12px 16px;font-size:0.85rem;color:var(--cream);margin-top:10px;font-family:'DM Sans',sans-serif;"></div>
+        </div>
+
+      </div>
+
       <!-- Calculate Button -->
       <button class="btn-primary" id="calculateBtn" type="button" style="margin-top:16px;">Calculate My Leave Time ✈️</button>
 
@@ -1272,6 +1361,92 @@
         pill.classList.add('active');
       });
     });
+
+    /* ============================================
+       ADVANCED MODE TOGGLE
+       ============================================ */
+    (function initAdvanced() {
+      var toggle = document.getElementById('advancedToggle');
+      var section = document.getElementById('advancedSection');
+      var isOpen = false;
+
+      toggle.addEventListener('click', function () {
+        isOpen = !isOpen;
+        section.style.display = isOpen ? 'block' : 'none';
+        toggle.textContent = isOpen ? '— Fewer factors' : '+ More factors';
+        if (isOpen && typeof gtag === 'function') gtag('event', 'advanced_mode_opened');
+      });
+
+      // Flight type — show preclearance note
+      var ftControl = document.getElementById('flightTypeControl');
+      ftControl.addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        ftControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        document.getElementById('preclearanceNote').style.display = parseInt(pill.getAttribute('data-buf')) === 50 ? 'block' : 'none';
+      });
+
+      // Party size
+      document.getElementById('partySizeControl').addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        this.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+      });
+
+      // Mobility
+      document.getElementById('mobilityControl').addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        this.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+      });
+
+      // First time — show note
+      var ftcControl = document.getElementById('firstTimeControl');
+      ftcControl.addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        ftcControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        document.getElementById('firstTimeNote').style.display = parseInt(pill.getAttribute('data-buf')) === 5 ? 'block' : 'none';
+      });
+
+      // Risk tolerance — show note for "Cannot miss"
+      var riskControl = document.getElementById('riskControl');
+      riskControl.addEventListener('click', function (e) {
+        var pill = e.target.closest('.pill');
+        if (!pill) return;
+        riskControl.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        document.getElementById('riskNote').style.display = parseInt(pill.getAttribute('data-buf')) === 40 ? 'block' : 'none';
+      });
+
+      // Travel day — game day banner
+      var TRAVEL_DAY_BANNERS = {
+        "normal": "",
+        "holiday": "Holiday travel peak — expect longer security lines and heavier airport traffic",
+        "summer": "Summer peak season — MCI wait times run 30-50% above average",
+        "monday": "Monday midday is MCI's peak security window — waits can hit 34 minutes",
+        "chiefs": "\uD83C\uDFC8 Chiefs home game today — expect heavy traffic on I-29 and I-435",
+        "sporting": "\u26BD Sporting KC home game today — allow extra time on I-435",
+        "currents": "\u26BD KC Currents home game today — allow extra time near the stadium",
+        "royals_day": "\u26BE Royals day game today — downtown traffic may affect your route",
+        "royals_evening": "\u26BE Royals evening game today — expect heavier traffic heading north"
+      };
+
+      document.getElementById('travelDay').addEventListener('change', function () {
+        var banner = document.getElementById('gameDayBanner');
+        var text = TRAVEL_DAY_BANNERS[this.value] || '';
+        if (text) {
+          banner.textContent = text;
+          banner.style.display = 'block';
+        } else {
+          banner.style.display = 'none';
+        }
+      });
+    })();
 
     /* ============================================
        CALCULATE BUTTON (placeholder — logic in Step 5)
