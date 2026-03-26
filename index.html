@@ -1920,6 +1920,7 @@
           <button type="button" class="seg-btn active" id="secStandard" data-wait="15">Standard <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">The regular TSA line — no enrollment needed. Average wait at MCI: 7-12 minutes. Everyone qualifies.</span></span></button>
           <button type="button" class="seg-btn" id="secPrecheck" data-wait="5">TSA PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Enrolled members keep shoes, laptops, and liquids in their bag. Average wait at MCI: 4-5 minutes. Costs $78 for 5 years at tsa.gov/precheck — worth it if you fly more than twice a year.</span></span></button>
           <button type="button" class="seg-btn" id="secClear" data-wait="4">CLEAR <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Biometric screening that skips the ID check queue — you still go through TSA screening after. Average wait at MCI: 3-4 minutes. Available at 3 MCI checkpoints. Learn more at clearme.com</span></span></button>
+          <button type="button" class="seg-btn" id="secClearPrecheck" data-wait="4">CLEAR + PreCheck <span class="tooltip-wrap"><span class="tooltip-icon">ⓘ</span><span class="tooltip-box">Fastest combo — CLEAR handles ID, PreCheck handles screening. ~4 min at MCI.</span></span></button>
         </div>
         <p class="note-text" id="securityNote">TSA PreCheck lanes at MCI open daily 2–10 PM on Concourses B &amp; C</p>
       </div>
@@ -1933,8 +1934,8 @@
         <div class="airport-style-pills" id="airportStyleControl">
           <button type="button" class="airport-style-pill active" data-buf="0" id="airportStyle1"><span id="airportStyle1Label">Straight to gate</span></button>
           <button type="button" class="airport-style-pill" data-buf="25" id="airportStyle2"><span id="airportStyle2Label">Browse &amp; grab a bite</span></button>
-          <button type="button" class="airport-style-pill" data-buf="40" id="airportStyle3"><span id="airportStyle3Label">Quick lounge stop</span></button>
-          <button type="button" class="airport-style-pill" data-buf="70" id="airportStyle4"><span id="airportStyle4Label">Full lounge experience</span></button>
+          <button type="button" class="airport-style-pill" data-buf="30" id="airportStyle3"><span id="airportStyle3Label">Quick lounge stop</span></button>
+          <button type="button" class="airport-style-pill" data-buf="60" id="airportStyle4"><span id="airportStyle4Label">Full lounge experience</span></button>
         </div>
         <p class="note-text" id="airportStyleNote">You know where you're going. No detours.</p>
       </div>
@@ -1985,9 +1986,9 @@
           <p class="note-text" id="advFlightTypeNote" style="display:none;">Preclearance means clearing customs before you board — common for Canada, Ireland, and UAE flights</p>
         </div>
 
-        <!-- Advanced B: Airline -->
+        <!-- Advanced B: Airline check-in cutoff -->
         <div class="card">
-          <label class="form-label">Airline</label>
+          <label class="form-label">Airline check-in cutoff</label>
           <select id="airlineSelect">
             <option value="0">Most airlines (45 min cutoff)</option>
             <option value="15">Spirit / Frontier / Allegiant (60 min cutoff)</option>
@@ -2430,8 +2431,8 @@
         var asBuf = activeAsPill ? parseInt(activeAsPill.getAttribute('data-buf')) : 0;
         if (asBuf === 0) asNote.textContent = c.airportNote1;
         else if (asBuf === 25) asNote.textContent = c.airportNote2;
-        else if (asBuf === 40) asNote.textContent = c.airportNote3;
-        else if (asBuf === 70) asNote.textContent = c.airportNote4;
+        else if (asBuf === 30) asNote.textContent = c.airportNote3;
+        else if (asBuf === 60) asNote.textContent = c.airportNote4;
       }
       // Notes
       var secNote = document.getElementById('securityNote');
@@ -3133,8 +3134,8 @@
       if (note) {
         if (buf === 0) note.textContent = c.airportNote1;
         else if (buf === 25) note.textContent = c.airportNote2;
-        else if (buf === 40) note.textContent = c.airportNote3;
-        else if (buf === 70) note.textContent = c.airportNote4;
+        else if (buf === 30) note.textContent = c.airportNote3;
+        else if (buf === 60) note.textContent = c.airportNote4;
       }
     });
 
@@ -3526,7 +3527,7 @@
       ];
 
       if (breakdown.airportStyleBuffer === 25) chips.push({ label: 'Food', value: breakdown.airportStyleBuffer });
-      else if (breakdown.airportStyleBuffer >= 40) chips.push({ label: 'Lounge', value: breakdown.airportStyleBuffer });
+      else if (breakdown.airportStyleBuffer >= 30) chips.push({ label: 'Lounge', value: breakdown.airportStyleBuffer });
       if (breakdown.bagBuffer > 0) chips.push({ label: 'Bags', value: breakdown.bagBuffer });
       if (advancedModeUsed && breakdown.intlBuffer > 0) chips.push({ label: 'International', value: breakdown.intlBuffer });
       if (advancedModeUsed && breakdown.partyBuffer > 0) chips.push({ label: 'Party', value: breakdown.partyBuffer });
