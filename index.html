@@ -881,6 +881,95 @@
       transform: translateY(0);
     }
 
+    .breakdown-gate-wrap {
+      position: relative;
+    }
+
+    .breakdown-gate-wrap.gated .breakdown-chips {
+      filter: blur(6px);
+      opacity: 0.4;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .breakdown-gate-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .breakdown-gate-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      max-width: 340px;
+      width: 100%;
+    }
+
+    .breakdown-gate-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .breakdown-gate-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .breakdown-gate-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .breakdown-gate-input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .breakdown-gate-input::placeholder {
+      color: var(--muted);
+    }
+
+    .breakdown-gate-btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      background: var(--gold);
+      color: #0a1628;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .breakdown-gate-btn:hover {
+      opacity: 0.9;
+    }
+
+    .breakdown-gate-disclosure {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
     .result-tone {
       font-size: 1rem;
       color: var(--cream);
@@ -1987,7 +2076,20 @@
       <p id="flightTimeSubtext" class="flight-subtext"></p>
       <div id="statusPill" class="status-pill"></div>
       <p id="bufferExplainer" class="buffer-explainer"></p>
-      <div id="breakdownChips" class="breakdown-chips"></div>
+      <div id="breakdownGateWrap" class="breakdown-gate-wrap">
+        <div id="breakdownChips" class="breakdown-chips"></div>
+        <div id="breakdownGateOverlay" class="breakdown-gate-overlay" style="display:none;">
+          <div class="breakdown-gate-card">
+            <p class="breakdown-gate-title">See why we recommend this time</p>
+            <p class="breakdown-gate-sub">Enter your email to unlock the full breakdown.</p>
+            <div class="breakdown-gate-form">
+              <input type="email" id="breakdownGateEmail" class="breakdown-gate-input" placeholder="you@email.com">
+              <button type="button" id="breakdownGateBtn" class="breakdown-gate-btn">Unlock</button>
+            </div>
+            <p class="breakdown-gate-disclosure">By submitting your email you agree to our <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Privacy Policy</a>. We never sell your data.</p>
+          </div>
+        </div>
+      </div>
       <p id="securityReassurance" class="security-note" style="display:none;">MCI's security is genuinely one of the fastest in the country — 7-15 min standard, 4-5 min PreCheck.</p>
       <p id="resultTone" class="result-tone"></p>
     </div>
@@ -3462,7 +3564,78 @@
 
       // GA4
       if (typeof gtag === 'function') gtag('event', 'result_shown');
+
+      // Apply breakdown gate
+      applyBreakdownGate();
     }
+
+    /* ============================================
+       BREAKDOWN EMAIL GATE
+       ============================================ */
+    function isBreakdownUnlocked() {
+      return localStorage.getItem('mmfkc-breakdown-unlocked') === 'true' ||
+        localStorage.getItem('mmfkc-cookies') === 'email_captured';
+    }
+
+    function applyBreakdownGate() {
+      var wrap = document.getElementById('breakdownGateWrap');
+      var overlay = document.getElementById('breakdownGateOverlay');
+
+      if (isBreakdownUnlocked()) {
+        wrap.classList.remove('gated');
+        overlay.style.display = 'none';
+        if (typeof gtag === 'function') gtag('event', 'breakdown_unlocked_returning');
+        return;
+      }
+
+      wrap.classList.add('gated');
+      overlay.style.display = 'flex';
+      if (typeof gtag === 'function') gtag('event', 'breakdown_gate_shown');
+    }
+
+    (function initBreakdownGate() {
+      var btn = document.getElementById('breakdownGateBtn');
+      var input = document.getElementById('breakdownGateEmail');
+
+      btn.addEventListener('click', function () {
+        var email = input.value.trim();
+        if (!email || email.indexOf('@') === -1) {
+          input.style.borderColor = '#f87171';
+          return;
+        }
+        input.style.borderColor = '';
+        btn.textContent = '...';
+        btn.disabled = true;
+
+        fetch('https://formspree.io/f/mlgorllg', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            form_type: 'breakdown_unlock',
+            leave_time: currentLeaveTime || '',
+            neighborhood: document.getElementById('neighborhoodInput').value || ''
+          })
+        }).then(function () {
+          localStorage.setItem('mmfkc-breakdown-unlocked', 'true');
+          var wrap = document.getElementById('breakdownGateWrap');
+          var overlay = document.getElementById('breakdownGateOverlay');
+          wrap.classList.remove('gated');
+          overlay.style.display = 'none';
+          if (typeof gtag === 'function') gtag('event', 'breakdown_email_submitted');
+        }).catch(function () {
+          localStorage.setItem('mmfkc-breakdown-unlocked', 'true');
+          var wrap = document.getElementById('breakdownGateWrap');
+          var overlay = document.getElementById('breakdownGateOverlay');
+          wrap.classList.remove('gated');
+          overlay.style.display = 'none';
+        });
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') btn.click();
+      });
+    })();
 
     /* ============================================
        CALCULATE BUTTON
