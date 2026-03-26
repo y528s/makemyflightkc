@@ -3300,6 +3300,43 @@
       // Security base from active segment button
       var activeSecBtn = document.querySelector('#securityControl .seg-btn.active');
       var securityBase = activeSecBtn ? parseInt(activeSecBtn.getAttribute('data-wait')) : 15;
+      var precheckFallback = false;
+
+      // Check if PreCheck/CLEAR+PreCheck is selected and if lanes will be open
+      var secBtnId = activeSecBtn ? activeSecBtn.id : '';
+      if (secBtnId === 'secPrecheck' || secBtnId === 'secClearPrecheck') {
+        // Estimate minutes-before-flight the user reaches security:
+        // flight minus (boarding + gate walk + airport style + bags)
+        var activeAsCheck = document.querySelector('#airportStyleControl .airport-style-pill.active');
+        var activeBagCheck = document.querySelector('#bagControl .pill.active');
+        var postSecurityMin = 35 + 15 +
+          (activeAsCheck ? parseInt(activeAsCheck.getAttribute('data-buf')) : 0) +
+          (activeBagCheck ? parseInt(activeBagCheck.getAttribute('data-buf')) : 0);
+        var secArrivalMin = flightMinutes - postSecurityMin;
+        secArrivalMin = ((secArrivalMin % 1440) + 1440) % 1440;
+
+        // MCI PreCheck hours by day of week (0=Sun … 6=Sat)
+        var dayOfWeek = flightDate.getDay();
+        var precheckOpen, precheckClose;
+        if (dayOfWeek === 6) {
+          // Saturday: 4 AM – 5 PM
+          precheckOpen = 4 * 60;
+          precheckClose = 17 * 60;
+        } else if (dayOfWeek === 2 || dayOfWeek === 3) {
+          // Tuesday, Wednesday: 4 AM – 5:30 PM
+          precheckOpen = 4 * 60;
+          precheckClose = 17 * 60 + 30;
+        } else {
+          // Sun, Mon, Thu, Fri: 4 AM – 6 PM
+          precheckOpen = 4 * 60;
+          precheckClose = 18 * 60;
+        }
+
+        if (secArrivalMin < precheckOpen || secArrivalMin >= precheckClose) {
+          securityBase = 15; // Fall back to Standard
+          precheckFallback = true;
+        }
+      }
 
       // Bag buffer
       var activeBagPill = document.querySelector('#bagControl .pill.active');
@@ -3441,7 +3478,8 @@
         partyBuffer: partyBuffer,
         mobilityBuffer: mobilityBuffer,
         riskBuffer: riskBuffer,
-        totalBuffer: totalBuffer
+        totalBuffer: totalBuffer,
+        precheckFallback: precheckFallback
       };
 
       // Step 5 — Fire GA4 event
@@ -3457,8 +3495,20 @@
         bufferExplainer.style.color = '';
       }
 
-      // Show security reassurance note
-      document.getElementById('securityReassurance').style.display = 'block';
+      // Show security reassurance note or PreCheck fallback warning
+      var secReassurance = document.getElementById('securityReassurance');
+      if (currentBreakdown.precheckFallback) {
+        secReassurance.textContent = 'TSA PreCheck lanes at MCI may be closed when you arrive \u2014 we used the Standard lane estimate instead. Verify current hours at tsa.gov/precheck/schedule.';
+        secReassurance.style.background = 'rgba(251,191,36,0.1)';
+        secReassurance.style.borderColor = 'rgba(251,191,36,0.25)';
+        secReassurance.style.color = '#fbbf24';
+      } else {
+        secReassurance.textContent = 'MCI\u2019s security is genuinely one of the fastest in the country \u2014 7-15 min standard, 4-5 min PreCheck.';
+        secReassurance.style.background = '';
+        secReassurance.style.borderColor = '';
+        secReassurance.style.color = '';
+      }
+      secReassurance.style.display = 'block';
 
       // Step 7 — Show post-result sections
       var sectionsToShow = ['shareSection', 'emailCapture', 'kofiSection'];
